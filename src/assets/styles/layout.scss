@@ -1,0 +1,52 @@
+.q-header {
+  z-index: 3000;
+}
+::v-deep .q-drawer {
+  height: calc(100% - 50px);
+  position: absolute;
+  top: 50px;
+}
+.open {
+  float: right;
+}
+::v-deep .open::before {
+  border: none !important;
+  background: #1976D2 !important;
+}
+.connectWallet {
+  width: 50%;
+  height: 550px !important;
+  background: white;
+  position: relative;
+  padding: 20px;
+
+  .title {
+    height: 56px;
+    line-height: 56px;
+    padding: 0 30px;
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+  }
+  .item {
+    width: 80%;
+    margin: 0 auto;
+    height: 56px;
+    line-height: 56px;
+  }
+}
+.save {
+  border-radius: 0;
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+}
+.shut-down {
+  font-size: 18px;
+  color: white;
+  min-height: 0;
+  min-width: 0;
+  height: 36px;
+  width: 36px;
+  float: right;
+}
