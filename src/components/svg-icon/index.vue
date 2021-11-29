@@ -40,12 +40,6 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.svg-icon {
-  width: 1em;
-  height: 1em;
-  vertical-align: -0.15em;
-  fill: currentColor;
-  overflow: hidden;
-}
+<style scoped lang="scss">
+@import "../../assets/styles/icon.scss";
 </style>

@@ -38,6 +38,8 @@ export default defineComponent({
         localStorage.setItem("errLog", JSON.stringify(err));
         state.logList.unshift("任务出错,设置正确的参数...");
         localStorage.setItem("price", JSON.stringify(state.logList));
+        localStorage.setItem("startTransfer", JSON.stringify(false));
+        localStorage.setItem("stopTransfer", JSON.stringify(true));
 
         ipcRenderer.send("real-time-price", {
           data: toRaw(state.logList),
@@ -60,7 +62,6 @@ export default defineComponent({
         // 读取配置开始任务
         if (JSON.parse(localStorage.getItem("autoConfig"))) {
           state.option = JSON.parse(localStorage.getItem("autoConfig"));
-          console.log("wallet", await new Run(state.option).wallet);
           // 币名
           let unit;
           try {

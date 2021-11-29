@@ -36,6 +36,8 @@ export default defineComponent({
         localStorage.setItem("errLog", JSON.stringify(err));
         state.logList.unshift("任务出错,设置正确的参数...");
         localStorage.setItem("preSale", JSON.stringify(state.logList));
+        localStorage.setItem("startTransfer", JSON.stringify(false));
+        localStorage.setItem("stopTransfer", JSON.stringify(true));
 
         ipcRenderer.send("pre-sale-echo", {
           data: toRaw(state.logList),

@@ -20,7 +20,7 @@ class sphericalMenuWindow {
       title: Common.SPHERICALMENU.TITLE,
       resizable: false,
       center: true,
-      show: false,
+      show: true,
       useContentSize: true,
       frame: false,
       autoHideMenuBar: true,

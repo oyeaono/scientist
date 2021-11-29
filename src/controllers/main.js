@@ -42,16 +42,15 @@ class mainWindow {
     this.isShown = false;
 
     Menu.setApplicationMenu(null);
-
-    if (!app.isPackaged) {
-      // if on DEV or Production with debug enabled
-      this.mainWindow.webContents.openDevTools();
-    } else {
-      // we're on production; no access to devtools pls
-      this.mainWindow.webContents.on("devtools-opened", () => {
-        this.mainWindow.webContents.closeDevTools();
-      });
-    }
+    // if (!app.isPackaged) {
+    //   // if on DEV or Production with debug enabled
+    //   this.mainWindow.webContents.openDevTools();
+    // } else {
+    //   // we're on production; no access to devtools pls
+    //   this.mainWindow.webContents.on("devtools-opened", () => {
+    //     this.mainWindow.webContents.closeDevTools();
+    //   });
+    // }
 
     this.mainWindow.on("close", (event) => {
       this.mainWindow.hide();

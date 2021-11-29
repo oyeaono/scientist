@@ -1,6 +1,14 @@
 "use strict";
 
-import { app, protocol, ipcMain, dialog, Menu, Tray } from "electron";
+import {
+  app,
+  protocol,
+  ipcMain,
+  dialog,
+  Menu,
+  Tray,
+  nativeImage,
+} from "electron";
 import path from "path";
 // import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== "production";
@@ -14,6 +22,9 @@ const SphericalMenuWindow = require("./controllers/spherical-menu");
 let invitationCode = "";
 // 防止系统托盘被辣鸡回收干掉
 let appTray = null;
+const trayImg = app.isPackaged
+  ? path.join(__dirname, "/icon.ico")
+  : path.join(__dirname, "../src/assets/icon.ico");
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -57,7 +68,6 @@ class Scientist {
   createMainWindow() {
     this.mainWindow = new MainWindow();
     this.mainWindow.hide();
-    this.tray();
   }
 
   createAutoOrderWindow() {
@@ -81,6 +91,7 @@ class Scientist {
   }
 
   tray() {
+    console.log("tu", trayImg);
     // 系统托盘右键菜单
     const trayMenuTemplate = [
       {
@@ -101,8 +112,7 @@ class Scientist {
       },
     ];
     // 系统托盘图标目录
-    const trayIcon = path.join(__dirname, "../src-electron/icons/");
-    appTray = new Tray(path.join(trayIcon, "icon.ico"));
+    appTray = new Tray(nativeImage.createFromPath(trayImg));
     // 图标的上下文菜单
     const contextMenu = Menu.buildFromTemplate(trayMenuTemplate);
 
@@ -114,6 +124,9 @@ class Scientist {
   }
 
   initApp() {
+    app.whenReady().then(() => {
+      this.tray();
+    });
     app.on("ready", () => {
       this.createSplashWindow();
       this.createInvitationCodeWindow();

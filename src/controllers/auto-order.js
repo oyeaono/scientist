@@ -43,15 +43,15 @@ class autoOrderWindow {
 
     Menu.setApplicationMenu(null);
 
-    if (!app.isPackaged) {
-      // if on DEV or Production with debug enabled
-      this.autoOrderWindow.webContents.openDevTools();
-    } else {
-      // we're on production; no access to devtools pls
-      this.autoOrderWindow.webContents.on("devtools-opened", () => {
-        this.autoOrderWindow.webContents.closeDevTools();
-      });
-    }
+    // if (!app.isPackaged) {
+    //   // if on DEV or Production with debug enabled
+    //   this.autoOrderWindow.webContents.openDevTools();
+    // } else {
+    //   // we're on production; no access to devtools pls
+    //   this.autoOrderWindow.webContents.on("devtools-opened", () => {
+    //     this.autoOrderWindow.webContents.closeDevTools();
+    //   });
+    // }
 
     this.autoOrderWindow.on("closed", () => {
       this.autoOrderWindow = null;

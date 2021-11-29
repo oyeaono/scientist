@@ -17,31 +17,34 @@ export class Run {
     this.option = option;
 
     // provider
-    this.provider = new ethers.providers.JsonRpcProvider(process.env.BSC_URL, {
-      name: process.env.BSC_NETWORK_NAME,
-      chainId: Number(process.env.BSC_NETWORK_CHAINID),
-    });
+    this.provider = new ethers.providers.JsonRpcProvider(
+      process.env.VUE_APP_BSC_URL,
+      {
+        name: process.env.VUE_APP_BSC_NETWORK_NAME,
+        chainId: Number(process.env.VUE_APP_BSC_NETWORK_CHAINID),
+      }
+    );
 
     // wallet
     this.wallet = new ethers.Wallet(this.option.privateKey, this.provider);
 
     // Factory合约 -> (factory地址)
     this.contractFactory = new ethers.Contract(
-      process.env.BSC_FACTORY,
+      process.env.VUE_APP_BSC_FACTORY,
       abi.factory,
       this.wallet
     );
 
     // Router01合约 -> (Router地址)
     this.contractRouter01 = new ethers.Contract(
-      process.env.BSC_ROUTER,
+      process.env.VUE_APP_BSC_ROUTER,
       abi.Router01,
       this.wallet
     );
 
     // Router02合约 -> (Router地址)
     this.contractRouter02 = new ethers.Contract(
-      process.env.BSC_ROUTER,
+      process.env.VUE_APP_BSC_ROUTER,
       abi.Router02,
       this.wallet
     );
@@ -55,7 +58,7 @@ export class Run {
 
     // Pair合约 -> (wbnb地址)
     this.contractWBNB = new ethers.Contract(
-      process.env.BNB,
+      process.env.VUE_APP_BNB,
       abi.pair,
       this.wallet
     );
@@ -65,7 +68,7 @@ export class Run {
   pair = async () => {
     return await this.contractFactory.getPair(
       this.option.contractAddress,
-      process.env.BNB
+      process.env.VUE_APP_BNB
     );
   };
 
@@ -167,7 +170,7 @@ export const buy = async (option) => {
     for (let i = 0; i < 64; i++) {
       await run.contractRouter01.swapExactETHForTokens(
         amountOutMin,
-        [process.env.BNB, option.contractAddress],
+        [process.env.VUE_APP_BNB, option.contractAddress],
         run.wallet.address,
         new Date().getTime(),
         {
@@ -182,7 +185,7 @@ export const buy = async (option) => {
     // 普通购买
     await run.contractRouter01.swapExactETHForTokens(
       amountOutMin,
-      [process.env.BNB, option.contractAddress],
+      [process.env.VUE_APP_BNB, option.contractAddress],
       run.wallet.address,
       new Date().getTime(),
       {
@@ -223,7 +226,7 @@ export const sale = async (option) => {
   console.log("sale tokenBalance1", amountIn, typeof amountIn);
 
   // 地址对
-  const path = [option.contractAddress, process.env.BNB];
+  const path = [option.contractAddress, process.env.VUE_APP_BNB];
 
   // 接收地址
   const addressTo = run.wallet.address;
@@ -236,7 +239,7 @@ export const sale = async (option) => {
 
   // approve -> Router拿走bnb(0xF... 极限最大数)
   await run.contractCoin.approve(
-    process.env.BSC_ROUTER,
+    process.env.VUE_APP_BSC_ROUTER,
     "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
   );
 

@@ -61,8 +61,6 @@ export default defineComponent({
   },
 });
 </script>
-<style scoped lang="css">
-.q-item__label {
-  text-align: center;
-}
+<style scoped lang="scss">
+@import "../assets/styles/essential.scss";
 </style>

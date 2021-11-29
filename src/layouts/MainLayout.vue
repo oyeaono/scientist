@@ -279,5 +279,5 @@ export default defineComponent({
 });
 </script>
 <style scoped lang="scss">
-@import "src/assets/styles/layout.scss";
+@import "../assets/styles/layout.scss";
 </style>

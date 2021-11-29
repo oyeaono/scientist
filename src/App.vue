@@ -30,5 +30,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import "assets/styles/app.scss";
+@import "./assets/styles/app.scss";
 </style>

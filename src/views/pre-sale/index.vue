@@ -215,22 +215,22 @@ export default defineComponent({
       },
       selectNetWork() {
         if (state.platform === "BSC") {
-          state.option.PROVIDER_URL = process.env.BSC_URL;
+          state.option.PROVIDER_URL = process.env.VUE_APP_BSC_URL;
           state.option.PROVIDER_NETWORK = {
-            name: process.env.BSC_NETWORK_NAME,
-            chainId: Number(process.env.BSC_NETWORK_CHAINID),
+            name: process.env.VUE_APP_BSC_NETWORK_NAME,
+            chainId: Number(process.env.VUE_APP_BSC_NETWORK_CHAINID),
           };
         } else if (state.platform === "ETH") {
-          state.option.PROVIDER_URL = process.env.BSC_URL;
+          state.option.PROVIDER_URL = process.env.VUE_APP_BSC_URL;
           state.option.PROVIDER_NETWORK = {
-            name: process.env.BSC_NETWORK_NAME,
-            chainId: Number(process.env.BSC_NETWORK_CHAINID),
+            name: process.env.VUE_APP_BSC_NETWORK_NAME,
+            chainId: Number(process.env.VUE_APP_BSC_NETWORK_CHAINID),
           };
         } else {
-          state.option.PROVIDER_URL = process.env.HECO_URL;
+          state.option.PROVIDER_URL = process.env.VUE_APP_HECO_URL;
           state.option.PROVIDER_NETWORK = {
-            name: process.env.HECO_NETWORK_NAME,
-            chainId: Number(process.env.HECO_NETWORK_CHAINID),
+            name: process.env.VUE_APP_HECO_NETWORK_NAME,
+            chainId: Number(process.env.VUE_APP_HECO_NETWORK_CHAINID),
           };
         }
       },
@@ -257,6 +257,8 @@ export default defineComponent({
       if (JSON.parse(localStorage.getItem("preSale"))) {
         state.logList = JSON.parse(localStorage.getItem("preSale"));
       }
+      state.startDisabled = JSON.parse(localStorage.getItem("startPreSale"));
+      state.stopDisabled = JSON.parse(localStorage.getItem("stopPreSale"));
 
       const Listener = window.ipc.on("echo-pre-sale", (data) => {
         state.logList = data;

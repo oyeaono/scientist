@@ -1,13 +1,13 @@
 <template>
   <q-fab color="purple" icon="keyboard_arrow_up" direction="up">
-    <q-fab-action color="amber" title="关闭程序" @click="closeWin">
+    <q-fab-action color="amber" title="关闭程序" @click="closeWin" icon="">
       <svg-icon
         icon-class="shut-down"
         style="font-size: 20px"
         title="关闭程序"
       ></svg-icon>
     </q-fab-action>
-    <q-fab-action color="secondary" title="窗口最大化" @click="maxWin">
+    <q-fab-action color="secondary" title="窗口最大化" @click="maxWin" icon="">
       <svg-icon
         icon-class="maximize"
         style="font-size: 16px"
