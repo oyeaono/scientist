@@ -68,12 +68,12 @@ class Scientist {
     this.preemptivePurchaseWindow = new PreemptivePurchaseWindow();
   }
 
-  createSphericalMenu() {
-    this.sphericalMenu = new PreSaleWindow();
+  createPreSaleWindow() {
+    this.preSaleWindow = new PreSaleWindow();
   }
 
-  createPreSaleWindow() {
-    this.preSaleWindow = new SphericalMenuWindow();
+  createSphericalMenuWindow() {
+    this.sphericalMenu = new SphericalMenuWindow();
   }
 
   init() {
@@ -203,7 +203,7 @@ class Scientist {
           if (res.response === 0) {
             e.preventDefault(); // 阻止默认行为，一定要有
             this.mainWindow.hide(); // 调用 最小化实例方法
-            this.createSphericalMenu();
+            this.createSphericalMenuWindow();
           } else if (res.response === 1) {
             // app.quit() 不要用quit() 会弹两次
             app.exit(); // exit()直接关闭客户端，不会执行quit();

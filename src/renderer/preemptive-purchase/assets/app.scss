@@ -1,0 +1,16 @@
+.hide-transfer {
+  overflow-x: auto;
+  height: 550px;
+}
+.hide-transfer::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #F5F5F5;
+}
+.hide-transfer::-webkit-scrollbar {
+  width: 10px;
+  background-color: #F5F5F5;
+}
+.hide-transfer::-webkit-scrollbar-thumb {
+  background-color: #000000;
+  border: 2px solid #555555;
+}

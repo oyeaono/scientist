@@ -1,0 +1,78 @@
+.market-open {
+  min-height: 550px !important;
+}
+.left {
+  width: 100px;
+  float: left;
+  height: 550px;
+}
+.right {
+  width: calc(100vw - 100px);
+  height: 550px;
+  float: left;
+
+  .transaction-msg {
+    overflow-x: auto;
+    width: calc(100% - 20px);
+    margin: 20px 0;
+    height: 510px;
+  }
+  .transaction-msg::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+  }
+  .transaction-msg::-webkit-scrollbar {
+    width: 10px;
+    background-color: #F5F5F5;
+  }
+  .transaction-msg::-webkit-scrollbar-thumb {
+    background-color: #000000;
+    border: 2px solid #555555;
+  }
+}
+.setting, .start, .stop {
+  border-radius: 0;
+  margin: 20px;
+}
+.dialogBox {
+  background: white;
+  min-height: 550px !important;
+  width: 50%;
+  padding: 20px;
+  max-width: 100% !important;
+  position: relative;
+
+  .title {
+    height: 56px;
+    line-height: 56px;
+    padding: 0 30px;
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+  }
+
+  .item {
+    width: 80%;
+    margin: 0 auto;
+    height: 56px;
+    line-height: 56px;
+    position: relative;
+
+    svg {
+      position: absolute;
+      right: -30px;
+      top: 18px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+  }
+}
+.save {
+  border-radius: 0;
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+}
+::v-deep .q-banner {
+  border-radius: 0 !important;
+}

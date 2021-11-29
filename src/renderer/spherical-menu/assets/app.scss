@@ -1,0 +1,10 @@
+.q-fab {
+  position: absolute;
+  top: 160px;
+  -webkit-app-region: drag;
+
+  ::v-deep .q-btn__content {
+    -webkit-app-region: no-drag;
+    white-space: unset;
+  }
+}

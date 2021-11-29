@@ -4,10 +4,13 @@ const path = require("path");
 const { BrowserWindow, Menu, app } = require("electron");
 const Common = require("../utils/common");
 
-const loadPath =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:8081/#/spherical-menu"
-    : `file://${__dirname}/#/spherical-menu/index.html`;
+const loadPath = app.isPackaged
+  ? `file://${__dirname}/spherical-menu.html`
+  : "http://127.0.0.1:8080/spherical-menu.html#/spherical-menu";
+
+const preload = app.isPackaged
+  ? path.join(__dirname, "/preload.js")
+  : path.resolve(__dirname, "../src/preload.js");
 
 class sphericalMenuWindow {
   constructor() {
@@ -17,7 +20,7 @@ class sphericalMenuWindow {
       title: Common.SPHERICALMENU.TITLE,
       resizable: false,
       center: true,
-      show: true,
+      show: false,
       useContentSize: true,
       frame: false,
       autoHideMenuBar: true,
@@ -28,7 +31,7 @@ class sphericalMenuWindow {
       titleBarStyle: "hidden",
       webPreferences: {
         contextIsolation: true,
-        preload: path.resolve(__dirname, "../preload.js"),
+        preload: preload,
         nodeIntegration: true,
         nodeIntegrationInWorker: true,
         enableRemoteModule: true,
@@ -41,7 +44,7 @@ class sphericalMenuWindow {
 
     Menu.setApplicationMenu(null);
 
-    // if (process.env.DEBUGGING) {
+    // if (!app.isPackaged) {
     //   // if on DEV or Production with debug enabled
     //   this.sphericalMenu.webContents.openDevTools();
     // } else {

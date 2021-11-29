@@ -9,7 +9,7 @@
  * .allowance -> 获取approve上限(钱包地址，Router地址)
  * */
 import { ethers } from "ethers";
-import abi from "@/abi/abi.json";
+import abi from "../abi/abi.json";
 import BigNumber from "bignumber.js";
 
 export class Run {

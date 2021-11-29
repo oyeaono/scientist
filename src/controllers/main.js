@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("path");
-const { BrowserWindow, Menu, app, ipcMain, ipcRenderer } = require("electron");
+const { BrowserWindow, Menu, app } = require("electron");
 const Common = require("../utils/common");
 const loadPath = app.isPackaged
   ? `file://${__dirname}/index.html`
@@ -10,8 +10,6 @@ const loadPath = app.isPackaged
 const preload = app.isPackaged
   ? path.join(__dirname, "/preload.js")
   : path.resolve(__dirname, "../src/preload.js");
-
-let invitationCode = "";
 
 class mainWindow {
   constructor() {
@@ -45,16 +43,15 @@ class mainWindow {
 
     Menu.setApplicationMenu(null);
 
-    this.mainWindow.webContents.openDevTools();
-    // if (process.env.DEBUGGING) {
-    //   // if on DEV or Production with debug enabled
-    //   this.mainWindow.webContents.openDevTools();
-    // } else {
-    //   // we're on production; no access to devtools pls
-    //   this.mainWindow.webContents.on("devtools-opened", () => {
-    //     this.mainWindow.webContents.closeDevTools();
-    //   });
-    // }
+    if (!app.isPackaged) {
+      // if on DEV or Production with debug enabled
+      this.mainWindow.webContents.openDevTools();
+    } else {
+      // we're on production; no access to devtools pls
+      this.mainWindow.webContents.on("devtools-opened", () => {
+        this.mainWindow.webContents.closeDevTools();
+      });
+    }
 
     this.mainWindow.on("close", (event) => {
       this.mainWindow.hide();

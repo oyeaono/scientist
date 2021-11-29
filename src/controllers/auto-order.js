@@ -3,15 +3,14 @@
 const path = require("path");
 const { BrowserWindow, Menu, app } = require("electron");
 const Common = require("../utils/common");
-if (!app.isPackaged) {
-  console.log("kaifa");
-} else {
-  console.log("shengchan");
-}
-const loadPath =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:8080/#/quantitative-transaction"
-    : `file://${__dirname}/#/quantitative-transaction/index.html`;
+
+const loadPath = app.isPackaged
+  ? `file://${__dirname}/quantitative-transaction.html`
+  : "http://127.0.0.1:8080/quantitative-transaction.html#/quantitative-transaction";
+
+const preload = app.isPackaged
+  ? path.join(__dirname, "/preload.js")
+  : path.resolve(__dirname, "../src/preload.js");
 
 class autoOrderWindow {
   constructor() {
@@ -21,7 +20,7 @@ class autoOrderWindow {
       title: Common.AUTO.TITLE,
       resizable: false,
       center: true,
-      show: true,
+      show: false,
       useContentSize: true,
       frame: false,
       autoHideMenuBar: true,
@@ -31,7 +30,7 @@ class autoOrderWindow {
       titleBarStyle: "hidden",
       webPreferences: {
         contextIsolation: true,
-        preload: path.resolve(__dirname, "../preload.js"),
+        preload: preload,
         nodeIntegration: true,
         nodeIntegrationInWorker: true,
         enableRemoteModule: true,
@@ -44,15 +43,15 @@ class autoOrderWindow {
 
     Menu.setApplicationMenu(null);
 
-    // if (process.env.DEBUGGING) {
-    //   // if on DEV or Production with debug enabled
-    //   this.autoOrderWindow.webContents.openDevTools();
-    // } else {
-    //   // we're on production; no access to devtools pls
-    //   this.autoOrderWindow.webContents.on("devtools-opened", () => {
-    //     this.autoOrderWindow.webContents.closeDevTools();
-    //   });
-    // }
+    if (!app.isPackaged) {
+      // if on DEV or Production with debug enabled
+      this.autoOrderWindow.webContents.openDevTools();
+    } else {
+      // we're on production; no access to devtools pls
+      this.autoOrderWindow.webContents.on("devtools-opened", () => {
+        this.autoOrderWindow.webContents.closeDevTools();
+      });
+    }
 
     this.autoOrderWindow.on("closed", () => {
       this.autoOrderWindow = null;

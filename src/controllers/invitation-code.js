@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("path");
-const { BrowserWindow, Menu, app, protocol, ipcMain } = require("electron");
+const { BrowserWindow, Menu, app } = require("electron");
 const Common = require("../utils/common");
 const loadPath = app.isPackaged
   ? `file://${__dirname}/invitation-code.html`
@@ -43,21 +43,19 @@ class invitationCodeWindow {
 
     Menu.setApplicationMenu(null);
 
-    this.invitationCodeWindow.webContents.openDevTools();
-
     this.invitationCodeWindow.on("closed", () => {
       this.invitationCodeWindow = null;
     });
 
-    // if (process.env.DEBUGGING) {
-    //   // if on DEV or Production with debug enabled
-    //   this.invitationCodeWindow.webContents.openDevTools();
-    // } else {
-    //   // we're on production; no access to devtools pls
-    //   this.invitationCodeWindow.webContents.on("devtools-opened", () => {
-    //     this.invitationCodeWindow.webContents.closeDevTools();
-    //   });
-    // }
+    if (!app.isPackaged) {
+      // if on DEV or Production with debug enabled
+      this.invitationCodeWindow.webContents.openDevTools();
+    } else {
+      // we're on production; no access to devtools pls
+      this.invitationCodeWindow.webContents.on("devtools-opened", () => {
+        this.invitationCodeWindow.webContents.closeDevTools();
+      });
+    }
   }
 
   closeWin() {

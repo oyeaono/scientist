@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("path");
-const { BrowserWindow, Menu, app, protocol, ipcMain } = require("electron");
+const { BrowserWindow, Menu, app } = require("electron");
 const Common = require("../utils/common");
 const loadPath = app.isPackaged
   ? `file://${__dirname}/splash.html`
@@ -42,7 +42,15 @@ class SplashWindow {
 
     Menu.setApplicationMenu(null);
 
-    this.splashWindow.webContents.openDevTools();
+    // if (!app.isPackaged) {
+    //   // if on DEV or Production with debug enabled
+    //   this.splashWindow.webContents.openDevTools();
+    // } else {
+    //   // we're on production; no access to devtools pls
+    //   this.splashWindow.webContents.on("devtools-opened", () => {
+    //     this.splashWindow.webContents.closeDevTools();
+    //   });
+    // }
 
     this.splashWindow.on("closed", () => {
       this.splashWindow = null;
