@@ -5,7 +5,6 @@
 <script>
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
 
-console.log("window", window);
 const { ipcRenderer } = window.electron;
 import { useStore } from "vuex";
 
@@ -19,7 +18,6 @@ export default defineComponent({
       console.log("store", store);
       // 查询是否激活
       // store.commit("setIsActivation", false)
-      console.log("window", window);
       ipcRenderer.send("main-finish", {
         isClose: true,
       });
