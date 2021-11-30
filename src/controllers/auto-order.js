@@ -42,7 +42,6 @@ class autoOrderWindow {
     this.isShown = false;
 
     Menu.setApplicationMenu(null);
-
     // if (!app.isPackaged) {
     //   // if on DEV or Production with debug enabled
     //   this.autoOrderWindow.webContents.openDevTools();

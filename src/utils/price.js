@@ -97,9 +97,14 @@ export const realTimePrice = async (option) => {
 
   // 调pair合约 -> pair余额
   let coinBalance = await run.contractCoin.balanceOf(run.pair());
+  const len = await run.decimals();
 
   // 1e18 -> 精度，不同币不一样精度
-  coinBalance = new BigNumber(coinBalance._hex).div(1e18);
+  if (len < 18) {
+    coinBalance = new BigNumber(coinBalance._hex).div(Math.pow(10, len));
+  } else {
+    coinBalance = new BigNumber(coinBalance._hex).div(1e18);
+  }
 
   let wbnbBalance = await run.contractWBNB.balanceOf(run.pair());
 
@@ -117,11 +122,17 @@ export const realTimePrice = async (option) => {
 export const coinBalance = async (option) => {
   const run = new Run(option);
 
-  const balance = await run.contractCoin.balanceOf(run.wallet.address);
+  let balance = await run.contractCoin.balanceOf(run.wallet.address);
+  const len = await run.decimals();
+  if (len < 18) {
+    balance = new BigNumber(balance._hex).div(Math.pow(10, len));
+  } else {
+    balance = new BigNumber(balance._hex).div(1e18);
+  }
 
   return {
-    params: new BigNumber(balance._hex).div(1e18),
-    value: new BigNumber(balance._hex).div(1e18).toString(),
+    params: balance,
+    value: balance.toString(),
   };
 };
 

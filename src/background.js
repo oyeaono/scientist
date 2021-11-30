@@ -36,12 +36,12 @@ if (isDevelopment) {
   if (process.platform === "win32") {
     process.on("message", (data) => {
       if (data === "graceful-exit") {
-        app.quit();
+        app.exit();
       }
     });
   } else {
     process.on("SIGTERM", () => {
-      app.quit();
+      app.exit();
     });
   }
 }
@@ -202,32 +202,34 @@ class Scientist {
 
     // 关闭程序清空localstorage
     ipcMain.on("shut-down", (e, res) => {
-      dialog
-        .showMessageBox({
-          type: "info",
-          title: "提示",
-          defaultId: 0,
-          cancelId: 2,
-          message: "确定要关闭吗？",
-          buttons: ["悬浮球", "直接退出"],
-        })
-        .then((res) => {
-          console.log("res", res);
-          if (res.response === 0) {
-            e.preventDefault(); // 阻止默认行为，一定要有
-            this.mainWindow.hide(); // 调用 最小化实例方法
-            this.createSphericalMenuWindow();
-          } else if (res.response === 1) {
-            // app.quit() 不要用quit() 会弹两次
-            app.exit(); // exit()直接关闭客户端，不会执行quit();
-          }
-        });
+      if (res.isClose) {
+        dialog
+          .showMessageBox({
+            type: "info",
+            title: "提示",
+            defaultId: 0,
+            cancelId: 2,
+            message: "确定要关闭吗？",
+            buttons: ["悬浮球", "直接退出"],
+          })
+          .then((res) => {
+            console.log("res", res);
+            if (res.response === 0) {
+              e.preventDefault(); // 阻止默认行为，一定要有
+              this.mainWindow.hide(); // 调用 最小化实例方法
+              this.createSphericalMenuWindow();
+            } else if (res.response === 1) {
+              // app.quit() 不要用quit() 会弹两次
+              app.exit(); // exit()直接关闭客户端，不会执行quit();
+            }
+          });
+      }
     });
 
     // 关闭程序
     ipcMain.on("close-win", (e, res) => {
       if (res.isClose) {
-        app.quit();
+        app.exit();
       }
     });
 
@@ -245,14 +247,14 @@ class Scientist {
 
     app.on("window-all-closed", () => {
       if (process.platform !== "darwin") {
-        app.quit();
+        app.exit();
       }
     });
 
     // 阻止程序多开
     const gotTheLock = app.requestSingleInstanceLock();
     if (!gotTheLock) {
-      app.quit();
+      app.exit();
     }
 
     app.on("activate", () => {
