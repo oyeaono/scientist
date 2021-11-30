@@ -129,7 +129,7 @@
 
 <script>
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
-import SvgIcon from "../../components/svg-icon/index.vue";
+// import SvgIcon from "../../components/svg-icon/index.vue";
 import { Dialog } from "quasar";
 const { ipcRenderer } = window.electron;
 
@@ -299,6 +299,14 @@ export default defineComponent({
       });
       Listener();
 
+      const Listener1 = window.ipc.on("resetBtn", (data) => {
+        if (data) {
+          state.startDisabled = false;
+          state.stopDisabled = true;
+        }
+      });
+      Listener1();
+
       // 回到自动交易
       if (JSON.parse(localStorage.getItem("price"))) {
         state.logList = JSON.parse(localStorage.getItem("price"));
@@ -306,8 +314,10 @@ export default defineComponent({
       if (JSON.parse(localStorage.getItem("autoConfig"))) {
         state.settingState = true;
       }
-      state.startDisabled = JSON.parse(localStorage.getItem("startTransfer"));
-      state.stopDisabled = JSON.parse(localStorage.getItem("stopTransfer"));
+      const startDisabled = JSON.parse(localStorage.getItem("startTransfer"));
+      const stopDisabled = JSON.parse(localStorage.getItem("stopTransfer"));
+      state.startDisabled = startDisabled ? startDisabled : false;
+      state.stopDisabled = stopDisabled ? stopDisabled : true;
     });
     return {
       ...toRefs(state),

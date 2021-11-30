@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, onMounted, toRaw } from "vue";
+import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import { Dialog } from "quasar";
 const { ipcRenderer } = window.electron;
 
@@ -266,13 +266,23 @@ export default defineComponent({
       if (JSON.parse(localStorage.getItem("preempt"))) {
         state.logList = JSON.parse(localStorage.getItem("preempt"));
       }
-      state.startDisabled = JSON.parse(localStorage.getItem("startPreempt"));
-      state.stopDisabled = JSON.parse(localStorage.getItem("stopPreempt"));
+      const startDisabled = JSON.parse(localStorage.getItem("startPreempt"));
+      const stopDisabled = JSON.parse(localStorage.getItem("stopPreempt"));
+      state.startDisabled = startDisabled ? startDisabled : false;
+      state.stopDisabled = stopDisabled ? stopDisabled : true;
 
       const Listener = window.ipc.on("echo-preempt", (data) => {
         state.logList = data;
       });
       Listener();
+
+      const Listener1 = window.ipc.on("resetMarketBtn", (data) => {
+        if (data) {
+          state.startDisabled = false;
+          state.stopDisabled = true;
+        }
+      });
+      Listener1();
     });
     return {
       ...toRefs(state),

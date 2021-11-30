@@ -257,13 +257,23 @@ export default defineComponent({
       if (JSON.parse(localStorage.getItem("preSale"))) {
         state.logList = JSON.parse(localStorage.getItem("preSale"));
       }
-      state.startDisabled = JSON.parse(localStorage.getItem("startPreSale"));
-      state.stopDisabled = JSON.parse(localStorage.getItem("stopPreSale"));
+      const startDisabled = JSON.parse(localStorage.getItem("startPreSale"));
+      const stopDisabled = JSON.parse(localStorage.getItem("stopPreSale"));
+      state.startDisabled = startDisabled ? startDisabled : false;
+      state.stopDisabled = stopDisabled ? stopDisabled : true;
 
       const Listener = window.ipc.on("echo-pre-sale", (data) => {
         state.logList = data;
       });
       Listener();
+
+      const Listener1 = window.ipc.on("resetPreBtn", (data) => {
+        if (data) {
+          state.startDisabled = false;
+          state.stopDisabled = true;
+        }
+      });
+      Listener1();
     });
     return {
       ...toRefs(state),

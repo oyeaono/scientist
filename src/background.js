@@ -162,6 +162,9 @@ class Scientist {
       if (res.isClose) {
         this.createAutoOrderWindow();
       } else {
+        this.mainWindow.sendMsg("resetBtn", {
+          isClose: true,
+        });
         this.autoOrderWindow.closeWin();
       }
     });
@@ -176,6 +179,9 @@ class Scientist {
       if (res.isClose) {
         this.createPreemptivePurchaseWindow();
       } else {
+        this.mainWindow.sendMsg("resetMarketBtn", {
+          isClose: true,
+        });
         this.preemptivePurchaseWindow.closeWin();
       }
     });
@@ -190,6 +196,9 @@ class Scientist {
       if (res.isClose) {
         this.createPreSaleWindow();
       } else {
+        this.mainWindow.sendMsg("resetPreBtn", {
+          isClose: true,
+        });
         this.preSaleWindow.closeWin();
       }
     });

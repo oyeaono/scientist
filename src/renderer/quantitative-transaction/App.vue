@@ -16,13 +16,7 @@
 
 <script>
 import { defineComponent, reactive, toRefs, onMounted, toRaw } from "vue";
-import {
-  realTimePrice,
-  coinBalance,
-  sale,
-  buy,
-  Run,
-} from "../../utils/price.js";
+import { realTimePrice, sale, buy, Run } from "../../utils/price.js";
 const { ipcRenderer } = window.electron;
 
 export default defineComponent({
@@ -67,7 +61,7 @@ export default defineComponent({
           try {
             unit = (await new Run(state.option).name()).split(" ")[0];
           } catch (err) {
-            // state.taskError(err);
+            state.taskError(err);
           }
           // 轮询任务
           state.windowTimer = setInterval(async () => {
@@ -79,7 +73,7 @@ export default defineComponent({
             try {
               price = (await realTimePrice(state.option)).value;
             } catch (err) {
-              // state.taskError(err);
+              state.taskError(err);
             }
             console.log("price", price, typeof price);
             state.logList.unshift(`${price} BNB / ${unit}`);
