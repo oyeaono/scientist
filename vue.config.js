@@ -44,6 +44,14 @@ module.exports = {
     },
     electronBuilder: {
       preload: "src/preload.js",
+      builderOptions: {
+        productName: "scientist",
+        appId: "com.leek.scientist",
+        copyright: "韭菜社区",
+        win: {
+          icon: "/src/assets/icon.ico",
+        },
+      },
     },
   },
   transpileDependencies: ["quasar"],

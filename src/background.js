@@ -23,7 +23,7 @@ let invitationCode = "";
 // 防止系统托盘被辣鸡回收干掉
 let appTray = null;
 const trayImg = app.isPackaged
-  ? path.join(__dirname, "/icon.ico")
+  ? path.join(__dirname, "/favicon.ico")
   : path.join(__dirname, "../src/assets/icon.ico");
 
 // Scheme must be registered before the app is ready
@@ -91,7 +91,6 @@ class Scientist {
   }
 
   tray() {
-    console.log("tu", trayImg);
     // 系统托盘右键菜单
     const trayMenuTemplate = [
       {
