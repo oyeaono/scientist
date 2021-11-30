@@ -97,9 +97,6 @@ class Scientist {
         label: "打开",
         click: () => {
           this.mainWindow.show();
-          if (this.sphericalMenu) {
-            this.sphericalMenu.closeWin();
-          }
         }, // 打开相应页面
       },
       {
