@@ -58,7 +58,7 @@ Common.PREEMPTPRESALE = {
 Common.SPHERICALMENU = {
   WINDOW_SIZE: {
     width: 56,
-    height: 220,
+    height: 180,
   },
   TITLE: "scientist tool",
 };

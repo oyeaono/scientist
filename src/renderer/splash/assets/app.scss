@@ -1,8 +1,15 @@
+#app {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
 .sk-circle-bounce {
   width: 64px;
   height: 64px;
   position: relative;
-  margin: 0 auto;
+  margin-top: calc((100vh - 64px) / 2);
 }
 .sk-circle-bounce .sk-child {
   width: 100%;

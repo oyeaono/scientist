@@ -1,10 +1,13 @@
+body, #app {
+  width: 56px !important;
+  //height: 56px !important;
+  min-width: 56px !important;
+  //min-height: 56px !important;
+}
 .q-fab {
-  position: absolute;
-  top: 160px;
   -webkit-app-region: drag;
-
-  ::v-deep .q-btn__content {
-    -webkit-app-region: no-drag;
-    white-space: unset;
-  }
+}
+.q-btn__content {
+  -webkit-app-region: no-drag;
+  white-space: unset !important;
 }

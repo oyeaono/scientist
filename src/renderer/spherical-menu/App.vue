@@ -1,5 +1,5 @@
 <template>
-  <q-fab color="purple" icon="keyboard_arrow_up" direction="up">
+  <q-fab glossy color="purple" icon="keyboard_arrow_up" direction="down">
     <q-fab-action color="amber" title="关闭程序" @click="closeWin" icon="">
       <svg-icon
         icon-class="shut-down"
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, onMounted } from "vue";
+import { defineComponent, reactive, toRefs } from "vue";
 import SvgIcon from "../../components/svg-icon/index.vue";
 const { ipcRenderer } = window.electron;
 
@@ -45,6 +45,6 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import "./assets/app.scss";
 </style>
