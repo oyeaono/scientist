@@ -133,6 +133,7 @@ import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import { Dialog } from "quasar";
 const { ipcRenderer } = window.electron;
 import { Run } from "../../utils/price.js";
+import { ethers } from "ethers";
 
 export default defineComponent({
   name: "AutoOrder",
@@ -216,6 +217,12 @@ export default defineComponent({
           console.log("Current block number: " + blockNumber);
         });
 
+        // gas费
+        await run.provider.getGasPrice().then((gasPrice) => {
+          const gasPriceString = gasPrice.toString();
+          console.log("Current gas price: " + gasPriceString);
+        });
+
         // 最新区块信息
         await run.provider.getBlock(blockNum).then((block) => {
           console.log("block", block);
@@ -225,6 +232,13 @@ export default defineComponent({
         // 最新区块交易信息，获取bsc的币种
         await run.provider.getTransaction(blockList[0]).then((transaction) => {
           console.log("x1", transaction);
+          console.log(
+            "x11",
+            new ethers.utils.AbiCoder().decode(
+              ["uint[]", "string"],
+              transaction.data.toString()
+            )
+          );
         });
 
         await run.provider
