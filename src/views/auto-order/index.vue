@@ -132,6 +132,7 @@ import { defineComponent, reactive, toRefs, onMounted } from "vue";
 // import SvgIcon from "../../components/svg-icon/index.vue";
 import { Dialog } from "quasar";
 const { ipcRenderer } = window.electron;
+import { Run } from "../../utils/price.js";
 
 export default defineComponent({
   name: "AutoOrder",
@@ -151,14 +152,14 @@ export default defineComponent({
       sellOut: "",
       amount: "",
       settingState: false,
-      // privateKey: "0xa9bafdbae84a68de18746d6d0c60ffb6f7c9b92b726c5928c778ad0cfd833020",
-      // coinToken: "0x711D17c6EEE1Fa812db7A9e2EB9971e5D6252A05",
+      // privateKey: "0x98727c99453ad81e18db292c7442526f8d7d4f1c8d60b7a7014d0151a9055a26",
+      // coinToken: "0xd41fdb03ba84762dd66a0af1a6c8540ff1ba5dfb",
       timer: null,
       logList: [],
       option: {},
       loop: false,
       batch: false,
-      saveSetting() {
+      async saveSetting() {
         if (!state.platform) {
           state.emptyTip("选择公链");
           return;
@@ -204,6 +205,33 @@ export default defineComponent({
         state.option.poll = Number(state.poll);
         localStorage.setItem("autoConfig", JSON.stringify(state.option));
         console.log("option", state.option);
+
+        const run = new Run(state.option);
+        let blockNum, blockList;
+        console.log("run", run.provider);
+
+        // 最新区块号
+        await run.provider.getBlockNumber().then((blockNumber) => {
+          blockNum = blockNumber;
+          console.log("Current block number: " + blockNumber);
+        });
+
+        // 最新区块信息
+        await run.provider.getBlock(blockNum).then((block) => {
+          console.log("block", block);
+          blockList = block.transactions;
+        });
+
+        // 最新区块交易信息，获取bsc的币种
+        await run.provider.getTransaction(blockList[0]).then((transaction) => {
+          console.log("x1", transaction);
+        });
+
+        await run.provider
+          .getTransactionReceipt(blockList[0])
+          .then((receipt) => {
+            console.log("x2", receipt);
+          });
       },
       // 打开配置
       openSetting() {
