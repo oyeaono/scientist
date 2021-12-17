@@ -128,7 +128,13 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, onMounted } from "vue";
+import {
+  defineComponent,
+  reactive,
+  toRefs,
+  onMounted,
+  getCurrentInstance,
+} from "vue";
 // import SvgIcon from "../../components/svg-icon/index.vue";
 import { Dialog } from "quasar";
 const { ipcRenderer } = window.electron;
@@ -139,6 +145,7 @@ export default defineComponent({
   name: "AutoOrder",
   // components: { SvgIcon },
   setup() {
+    const { proxy } = getCurrentInstance();
     const state = reactive({
       settingShow: false,
       startDisabled: false,
@@ -235,8 +242,8 @@ export default defineComponent({
           console.log(
             "x11",
             new ethers.utils.AbiCoder().decode(
-              ["uint[]", "string"],
-              transaction.data.toString()
+              ["uint256", "address[]", "address", "uint256"],
+              transaction.data
             )
           );
         });
@@ -335,6 +342,12 @@ export default defineComponent({
     });
     onMounted(async () => {
       console.log("window", window);
+
+      const url = `https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=0xe8Df1A7Fc28E97f55c2642a587281207203760c3&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
+
+      proxy.$axios.post(url).then((res) => {
+        console.log("res", res, res.data.result / 1e18);
+      });
 
       const Listener = window.ipc.on("echo-price", (data) => {
         state.logList = data;
