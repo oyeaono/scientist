@@ -138,8 +138,8 @@ import {
 // import SvgIcon from "../../components/svg-icon/index.vue";
 import { Dialog } from "quasar";
 const { ipcRenderer } = window.electron;
-import { Run } from "../../utils/price.js";
-import { ethers } from "ethers";
+import { Run, coinBalance } from "../../utils/price.js";
+// import { ethers } from "ethers";
 
 export default defineComponent({
   name: "AutoOrder",
@@ -239,13 +239,13 @@ export default defineComponent({
         // 最新区块交易信息，获取bsc的币种
         await run.provider.getTransaction(blockList[0]).then((transaction) => {
           console.log("x1", transaction);
-          console.log(
-            "x11",
-            new ethers.utils.AbiCoder().decode(
-              ["uint256", "address[]", "address", "uint256"],
-              transaction.data
-            )
-          );
+          // console.log(
+          //   "x11",
+          //   new ethers.utils.AbiCoder().decode(
+          //     ["uint256", "address[]", "address", "uint256"],
+          //     transaction.data
+          //   )
+          // );
         });
 
         await run.provider
@@ -253,6 +253,8 @@ export default defineComponent({
           .then((receipt) => {
             console.log("x2", receipt);
           });
+
+        console.log("coinBalance", await coinBalance(state.option));
       },
       // 打开配置
       openSetting() {
@@ -343,11 +345,12 @@ export default defineComponent({
     onMounted(async () => {
       console.log("window", window);
 
-      const url = `https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=0xe8Df1A7Fc28E97f55c2642a587281207203760c3&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
-      // const url1 = `https://api.bscscan.com/api?module=contract&action=getabi&address=0xdA62CD97BaeCEff21232e26f3Fc0Db76dCd34001&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
-      // const url2 = `https://api.bscscan.com/api?module=contract&action=getsourcecode&address=0xe8Df1A7Fc28E97f55c2642a587281207203760c3&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
-      // const url3 = `https://api.bscscan.com/api?module=stats&action=tokenCsupply&contractaddress=0xe8Df1A7Fc28E97f55c2642a587281207203760c3&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
-      const url4 = `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=0xe8Df1A7Fc28E97f55c2642a587281207203760c3s&address=0x89e73303049ee32919903c09e8de5629b84f59eb&tag=latest&apikey=YourApiKeyToken`;
+      const url = `https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=0xc275e54cf6064f72b1b6f1b8e9a2e8169647038b3&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
+      const url1 = `https://api.bscscan.com/api?module=contract&action=getabi&address=0xc275e54cf6064f72b1b6f1b8e9a2e8169647038b&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
+      const url2 = `https://api.bscscan.com/api?module=contract&action=getsourcecode&address=0xc275e54cf6064f72b1b6f1b8e9a2e8169647038b&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
+      const url3 = `https://api.bscscan.com/api?module=account&action=txlist&address=0xe8Df1A7Fc28E97f55c2642a587281207203760c3&startblock=0&endblock=99999999&page=1&offset=&sort=asc&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
+      const url4 = `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=0xe8Df1A7Fc28E97f55c2642a587281207203760c3s&address=0xe8df1a7fc28e97f55c2642a587281207203760c3&tag=latest&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
+      const url5 = `https://api.bscscan.com/api?module=account&action=txlistinternal&address=0x6111C64629AdA9c769aB31286CfD5f11B4a30aE2&startblock=0&endblock=2702578&page=1&offset=10&sort=asc&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
 
       proxy.$axios.post(url).then((res) => {
         console.log("总量", res, res.data.result / 1e18);
@@ -358,11 +361,20 @@ export default defineComponent({
       proxy.$axios.post(url4).then((res) => {
         console.log("钱包币余额", res, res.data.result / 1e18);
       });
-      // proxy.$axios.post(url1).then((res) => {
-      //   console.log("合约ABI", res, res.data.result);
-      // });
-      // proxy.$axios.post(url2).then((res) => {
-      //   console.log("合约源码", res, res.data.result[0].SourceCode);
+      proxy.$axios.post(url1).then((res) => {
+        console.log("合约ABI", res, res.data.result);
+      });
+      proxy.$axios.post(url2).then((res) => {
+        console.log("合约源码", res, res.data.result[0]?.SourceCode);
+      });
+      proxy.$axios.post(url3).then((res) => {
+        console.log("正常交易列表", res);
+      });
+      proxy.$axios.post(url5).then((res) => {
+        console.log("内部交易列表", res);
+      });
+      // proxy.$axios.post(url5).then((res) => {
+      //   console.log("钱包种类", res);
       // });
 
       const Listener = window.ipc.on("echo-price", (data) => {
