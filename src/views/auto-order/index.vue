@@ -344,10 +344,26 @@ export default defineComponent({
       console.log("window", window);
 
       const url = `https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=0xe8Df1A7Fc28E97f55c2642a587281207203760c3&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
+      // const url1 = `https://api.bscscan.com/api?module=contract&action=getabi&address=0xdA62CD97BaeCEff21232e26f3Fc0Db76dCd34001&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
+      // const url2 = `https://api.bscscan.com/api?module=contract&action=getsourcecode&address=0xe8Df1A7Fc28E97f55c2642a587281207203760c3&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
+      // const url3 = `https://api.bscscan.com/api?module=stats&action=tokenCsupply&contractaddress=0xe8Df1A7Fc28E97f55c2642a587281207203760c3&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
+      const url4 = `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=0xe8Df1A7Fc28E97f55c2642a587281207203760c3s&address=0x89e73303049ee32919903c09e8de5629b84f59eb&tag=latest&apikey=YourApiKeyToken`;
 
       proxy.$axios.post(url).then((res) => {
-        console.log("res", res, res.data.result / 1e18);
+        console.log("总量", res, res.data.result / 1e18);
       });
+      proxy.$axios.post(url).then((res) => {
+        console.log("循环供应量", res, res.data.result / 1e18);
+      });
+      proxy.$axios.post(url4).then((res) => {
+        console.log("钱包币余额", res, res.data.result / 1e18);
+      });
+      // proxy.$axios.post(url1).then((res) => {
+      //   console.log("合约ABI", res, res.data.result);
+      // });
+      // proxy.$axios.post(url2).then((res) => {
+      //   console.log("合约源码", res, res.data.result[0].SourceCode);
+      // });
 
       const Listener = window.ipc.on("echo-price", (data) => {
         state.logList = data;
