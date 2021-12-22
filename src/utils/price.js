@@ -68,7 +68,7 @@ export class Run {
   pair = async () => {
     return await this.contractFactory.getPair(
       this.option.contractAddress,
-      process.env.VUE_APP_BNB
+      "0x6111C64629AdA9c769aB31286CfD5f11B4a30aE2"
     );
   };
 
@@ -121,8 +121,9 @@ export const realTimePrice = async (option) => {
 // 获取钱包币余额
 export const coinBalance = async (option) => {
   const run = new Run(option);
-
-  let balance = await run.contractCoin.balanceOf(run.wallet.address);
+  console.log("pair", run.pair());
+  let balance = await run.contractCoin.balanceOf(run.pair());
+  // let balance = await run.contractCoin.balanceOf(run.wallet.address);
   const len = await run.decimals();
   if (len < 18) {
     balance = new BigNumber(balance._hex).div(Math.pow(10, len));

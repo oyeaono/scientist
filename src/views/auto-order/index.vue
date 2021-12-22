@@ -140,6 +140,7 @@ import { Dialog } from "quasar";
 const { ipcRenderer } = window.electron;
 import { Run, coinBalance } from "../../utils/price.js";
 // import { ethers } from "ethers";
+// import Web3 from "web3";
 
 export default defineComponent({
   name: "AutoOrder",
@@ -346,33 +347,55 @@ export default defineComponent({
       console.log("window", window);
 
       const url = `https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=0xc275e54cf6064f72b1b6f1b8e9a2e8169647038b3&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
-      const url1 = `https://api.bscscan.com/api?module=contract&action=getabi&address=0xc275e54cf6064f72b1b6f1b8e9a2e8169647038b&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
-      const url2 = `https://api.bscscan.com/api?module=contract&action=getsourcecode&address=0xc275e54cf6064f72b1b6f1b8e9a2e8169647038b&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
+      const url1 = `https://api.bscscan.com/api?module=contract&action=getabi&address=0xe8Df1A7Fc28E97f55c2642a587281207203760c3&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
+      const url2 = `https://api.bscscan.com/api?module=contract&action=getsourcecode&address=0xe8Df1A7Fc28E97f55c2642a587281207203760c3&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
       const url3 = `https://api.bscscan.com/api?module=account&action=txlist&address=0xe8Df1A7Fc28E97f55c2642a587281207203760c3&startblock=0&endblock=99999999&page=1&offset=&sort=asc&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
-      const url4 = `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=0xe8Df1A7Fc28E97f55c2642a587281207203760c3s&address=0xe8df1a7fc28e97f55c2642a587281207203760c3&tag=latest&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
-      const url5 = `https://api.bscscan.com/api?module=account&action=txlistinternal&address=0x6111C64629AdA9c769aB31286CfD5f11B4a30aE2&startblock=0&endblock=2702578&page=1&offset=10&sort=asc&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
+      const url4 = `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=0xe8Df1A7Fc28E97f55c2642a587281207203760c3&address=0xc64accf7c3e009bf57310adadc23a5932dd5ac7f&tag=latest&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
+      const url5 = `https://api.bscscan.com/api?module=account&action=txlistinternal&address=0xe8Df1A7Fc28E97f55c2642a587281207203760c3&startblock=0&endblock=99999999&page=1&offset=&sort=asc&apikey=RBR5Q6JPESKIME2FRNCPQ13YJRUX1WW5UJ`;
 
-      proxy.$axios.post(url).then((res) => {
+      let trx = [];
+      await proxy.$axios.post(url).then((res) => {
         console.log("总量", res, res.data.result / 1e18);
       });
-      proxy.$axios.post(url).then((res) => {
+      await proxy.$axios.post(url).then((res) => {
         console.log("循环供应量", res, res.data.result / 1e18);
       });
-      proxy.$axios.post(url4).then((res) => {
-        console.log("钱包币余额", res, res.data.result / 1e18);
+      await proxy.$axios.post(url4).then((res) => {
+        console.log("钱包币余额", res, res.data.result);
       });
-      proxy.$axios.post(url1).then((res) => {
-        console.log("合约ABI", res, res.data.result);
+      await proxy.$axios.post(url1).then((res) => {
+        console.log("合约ABI", res);
       });
-      proxy.$axios.post(url2).then((res) => {
-        console.log("合约源码", res, res.data.result[0]?.SourceCode);
+      await proxy.$axios.post(url2).then((res) => {
+        console.log("合约源码", res);
       });
-      proxy.$axios.post(url3).then((res) => {
+      await proxy.$axios.post(url3).then((res) => {
         console.log("正常交易列表", res);
       });
-      proxy.$axios.post(url5).then((res) => {
+      await proxy.$axios.post(url5).then((res) => {
+        trx = res.data.result;
         console.log("内部交易列表", res);
       });
+
+      let from = [];
+      let to = [];
+      trx.forEach((item) => {
+        if (
+          item.from &&
+          item.from !== "0xe8Df1A7Fc28E97f55c2642a587281207203760c3"
+        ) {
+          from.push(item.from);
+        }
+        if (
+          item.to &&
+          item.to !== "0xe8Df1A7Fc28E97f55c2642a587281207203760c3"
+        ) {
+          to.push(item.to);
+        }
+      });
+      console.log("trx", trx);
+      console.log("from", from);
+      console.log("to", to);
       // proxy.$axios.post(url5).then((res) => {
       //   console.log("钱包种类", res);
       // });
