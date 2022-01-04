@@ -88,14 +88,14 @@
           />
           <!--          <svg-icon icon-class="setting-tip"></svg-icon>-->
         </div>
-        <div class="item">
-          <q-input
-            v-model="sellOut"
-            label="卖出价格(单位: 币 / BNB)"
-            :dense="dense"
-          />
-          <!--          <svg-icon icon-class="setting-tip"></svg-icon>-->
-        </div>
+        <!--        <div class="item">-->
+        <!--          <q-input-->
+        <!--            v-model="sellOut"-->
+        <!--            label="卖出价格(单位: 币 / BNB)"-->
+        <!--            :dense="dense"-->
+        <!--          />-->
+        <!--          &lt;!&ndash;          <svg-icon icon-class="setting-tip"></svg-icon>&ndash;&gt;-->
+        <!--        </div>-->
         <q-btn
           label="保存"
           glossy

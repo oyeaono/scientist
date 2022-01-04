@@ -16,13 +16,7 @@
 
 <script>
 import { defineComponent, reactive, toRefs, onMounted, toRaw } from "vue";
-import {
-  realTimePrice,
-  coinBalance,
-  sale,
-  buy,
-  Run,
-} from "../../utils/price.js";
+import { realTimePrice, buy } from "../../utils/price.js";
 const { ipcRenderer } = window.electron;
 
 export default defineComponent({

@@ -76,3 +76,20 @@
 ::v-deep .q-banner {
   border-radius: 0 !important;
 }
+.q-pa-md {
+  padding: 0;
+  background: white;
+
+  ::v-deep .q-field__control {
+    background: white;
+  }
+
+  ::v-deep .q-field__control::before {
+    background: white;
+  }
+
+  .q-field {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.24);
+    transition: border-color 0.36s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}

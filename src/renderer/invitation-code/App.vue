@@ -6,16 +6,16 @@
 </template>
 
 <script>
-import { defineComponent, onMounted } from "vue";
+import { defineComponent } from "vue";
 const { ipcRenderer } = window.electron;
-import { useStore } from "vuex";
+// import { useStore } from "vuex";
 import "./utils/index";
 
 export default defineComponent({
   name: "InvitationCode",
   mounted() {
     // localStorage.clear()
-    const store = useStore();
+    // const store = useStore();
     // 查询是否激活
     // store.commit("setIsActivation", false)
     console.log("x", ipcRenderer);

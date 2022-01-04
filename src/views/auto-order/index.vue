@@ -138,7 +138,7 @@ import {
 // import SvgIcon from "../../components/svg-icon/index.vue";
 import { Dialog } from "quasar";
 const { ipcRenderer } = window.electron;
-import { Run, coinBalance } from "../../utils/price.js";
+// import { Run, coinBalance } from "../../utils/price.js";
 // import { ethers } from "ethers";
 // import Web3 from "web3";
 
@@ -215,47 +215,47 @@ export default defineComponent({
         localStorage.setItem("autoConfig", JSON.stringify(state.option));
         console.log("option", state.option);
 
-        const run = new Run(state.option);
-        let blockNum, blockList;
-        console.log("run", run.provider);
-
-        // 最新区块号
-        await run.provider.getBlockNumber().then((blockNumber) => {
-          blockNum = blockNumber;
-          console.log("Current block number: " + blockNumber);
-        });
-
-        // gas费
-        await run.provider.getGasPrice().then((gasPrice) => {
-          const gasPriceString = gasPrice.toString();
-          console.log("Current gas price: " + gasPriceString);
-        });
-
-        // 最新区块信息
-        await run.provider.getBlock(blockNum).then((block) => {
-          console.log("block", block);
-          blockList = block.transactions;
-        });
-
-        // 最新区块交易信息，获取bsc的币种
-        await run.provider.getTransaction(blockList[0]).then((transaction) => {
-          console.log("x1", transaction);
-          // console.log(
-          //   "x11",
-          //   new ethers.utils.AbiCoder().decode(
-          //     ["uint256", "address[]", "address", "uint256"],
-          //     transaction.data
-          //   )
-          // );
-        });
-
-        await run.provider
-          .getTransactionReceipt(blockList[0])
-          .then((receipt) => {
-            console.log("x2", receipt);
-          });
-
-        console.log("coinBalance", await coinBalance(state.option));
+        // const run = new Run(state.option);
+        // let blockNum, blockList;
+        // console.log("run", run.provider);
+        //
+        // // 最新区块号
+        // await run.provider.getBlockNumber().then((blockNumber) => {
+        //   blockNum = blockNumber;
+        //   console.log("Current block number: " + blockNumber);
+        // });
+        //
+        // // gas费
+        // await run.provider.getGasPrice().then((gasPrice) => {
+        //   const gasPriceString = gasPrice.toString();
+        //   console.log("Current gas price: " + gasPriceString);
+        // });
+        //
+        // // 最新区块信息
+        // await run.provider.getBlock(blockNum).then((block) => {
+        //   console.log("block", block);
+        //   blockList = block.transactions;
+        // });
+        //
+        // // 最新区块交易信息，获取bsc的币种
+        // await run.provider.getTransaction(blockList[0]).then((transaction) => {
+        //   console.log("x1", transaction);
+        //   // console.log(
+        //   //   "x11",
+        //   //   new ethers.utils.AbiCoder().decode(
+        //   //     ["uint256", "address[]", "address", "uint256"],
+        //   //     transaction.data
+        //   //   )
+        //   // );
+        // });
+        //
+        // await run.provider
+        //   .getTransactionReceipt(blockList[0])
+        //   .then((receipt) => {
+        //     console.log("x2", receipt);
+        //   });
+        //
+        // console.log("coinBalance", await coinBalance(state.option));
       },
       // 打开配置
       openSetting() {
