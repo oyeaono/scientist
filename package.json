@@ -2,7 +2,7 @@
   "name": "scientist",
   "version": "1.0.0",
   "private": true,
-  "author": "韭菜社区",
+  "author": "巅峰社区",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
