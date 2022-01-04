@@ -1,5 +1,8 @@
 .q-header {
   z-index: 3000;
+  background: black;
+  background-image: linear-gradient(
+                  180deg,hsla(0,0%,100%,0.3),hsla(0,0%,100%,0) 50%,rgba(0,0,0,0.12) 51%,rgba(0,0,0,0.04))!important;
 }
 ::v-deep .q-drawer {
   height: calc(100% - 50px);
@@ -8,10 +11,11 @@
 }
 .open {
   float: right;
+  background-image: none !important;
 }
 ::v-deep .open::before {
   border: none !important;
-  background: #1976D2 !important;
+  background: transparent !important;
 }
 .connectWallet {
   width: 50%;

@@ -47,7 +47,7 @@ module.exports = {
       builderOptions: {
         productName: "scientist",
         appId: "com.leek.scientist",
-        copyright: "韭菜社区",
+        copyright: "巅峰社区",
         win: {
           icon: "/src/assets/icon.ico",
         },

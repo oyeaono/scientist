@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          scientist tool
+          <span style="margin-left: 10%">scientist tool</span>
           <q-btn
             flat
             dense
@@ -118,18 +118,6 @@ const linksList = [
     link: "/",
   },
   {
-    title: "交易检测",
-    caption: "quasar.dev",
-    icon: "",
-    link: "/check-coin",
-  },
-  {
-    title: "貔貅检测",
-    caption: "quasar.dev",
-    icon: "",
-    link: "/brave-troops",
-  },
-  {
     title: "自动挂单",
     caption: "quasar.dev",
     icon: "",
@@ -183,7 +171,7 @@ export default defineComponent({
         // 查询是否激活，激活功能解锁
         state.leftDrawerOpen = !state.leftDrawerOpen;
       },
-      onOk(data) {
+      onOk() {
         console.log("onOk");
       },
 

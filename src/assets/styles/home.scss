@@ -3,16 +3,20 @@
   justify-content: center;
   align-items: center;
 
-  .q-page-container {
-    display: grid;
-    padding-top: 0 !important;
-    grid-template-rows: repeat(8, 36px);
-    grid-template-columns: repeat(2, 150px);
-    grid-row-gap: 20px;
-    grid-column-gap: 20px;
-  }
+  //.q-page-container {
+  //  display: grid;
+  //  padding-top: 0 !important;
+  //  grid-template-rows: repeat(8, 36px);
+  //  grid-template-columns: repeat(2, 150px);
+  //  grid-row-gap: 20px;
+  //  grid-column-gap: 20px;
+  //}
+}
+.q-card {
+  width: 30%;
 }
 .q-btn {
-  width: 150px;
-  border-radius: 0;
+  margin: 10%;
+  background-image: linear-gradient(
+                  180deg,hsla(0,0%,100%,0.3),hsla(0,0%,100%,0) 50%,rgba(0,0,0,0.12) 51%,rgba(0,0,0,0.04))!important;
 }

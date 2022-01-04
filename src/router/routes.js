@@ -70,36 +70,6 @@ const routes = [
       },
     ],
   },
-  {
-    // 交易检测
-    path: "/check-coin",
-    name: "CheckCoin",
-    component: () => import("../layouts/MainLayout.vue"),
-    children: [
-      {
-        path: "",
-        component: () =>
-          import(
-            /* webpackChunkName: "CheckCoin" */ "../views/check-coin/index.vue"
-          ),
-      },
-    ],
-  },
-  {
-    // 貔貅检测
-    path: "/brave-troops",
-    name: "BraveTroops",
-    component: () => import("../layouts/MainLayout.vue"),
-    children: [
-      {
-        path: "",
-        component: () =>
-          import(
-            /* webpackChunkName: "BraveTroops" */ "../views/brave-troops/index.vue"
-          ),
-      },
-    ],
-  },
 ];
 
 export default routes;

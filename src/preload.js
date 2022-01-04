@@ -4,6 +4,7 @@ const { networkInterfaces } = require("os");
 contextBridge.exposeInMainWorld("electron", {
   ipcRenderer,
   remote,
+  shell,
 });
 contextBridge.exposeInMainWorld("os", {
   networkInterfaces,
