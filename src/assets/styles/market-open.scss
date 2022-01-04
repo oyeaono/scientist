@@ -93,3 +93,6 @@
     transition: border-color 0.36s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
+::v-deep .q-menu--square {
+  top: 100px !important;
+}

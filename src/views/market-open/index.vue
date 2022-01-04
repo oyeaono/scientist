@@ -96,32 +96,14 @@
           <q-input v-model="sellOut" label="卖出倍数" :dense="dense" />
           <!--          <svg-icon icon-class="setting-tip"></svg-icon>-->
         </div>
-        <div class="q-pa-md item" style="max-width: 300px">
-          <q-input label="开盘时间" filled v-model="date">
-            <template v-slot:prepend>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-date v-model="date" mask="YYYY-MM-DD HH:mm">
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-
-            <template v-slot:append>
-              <q-icon name="access_time" class="cursor-pointer">
-                <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-time v-model="date" mask="YYYY-MM-DD HH:mm" format24h>
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-time>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
+        <div class="item">
+          <q-input
+            v-model="date"
+            label="开盘时间"
+            :dense="dense"
+            shadow-text="2022/1/1 23:00"
+          />
+          <!--          <svg-icon icon-class="setting-tip"></svg-icon>-->
         </div>
         <q-btn
           label="保存"
@@ -158,12 +140,7 @@ export default defineComponent({
       sellOut: "",
       option: {},
       batch: true,
-      date:
-        new Date().toJSON().split("T")[0] +
-        " " +
-        new Date().getHours().toString() +
-        ":" +
-        new Date().toJSON().split("T")[1].split(":")[1],
+      date: "",
       openSetting() {
         state.settingShow = true;
         state.showSetting();
@@ -320,6 +297,11 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import "../../assets/styles/market-open.scss";
+::v-deep .scroll {
+  max-height: initial !important;
+  top: 25px !important;
+  left: 257px !important;
+}
 </style>
