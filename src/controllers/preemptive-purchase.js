@@ -42,7 +42,6 @@ class preemptivePurchaseWindow {
     this.isShown = false;
 
     Menu.setApplicationMenu(null);
-    this.preemptivePurchaseWindow.webContents.openDevTools();
     // if (!app.isPackaged) {
     //   // if on DEV or Production with debug enabled
     //   this.preemptivePurchaseWindow.webContents.openDevTools();

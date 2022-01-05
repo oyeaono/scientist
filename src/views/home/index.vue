@@ -19,8 +19,9 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import getPcMsg from "../../utils/hardware";
 
 export default defineComponent({
   name: "Home",
@@ -31,6 +32,9 @@ export default defineComponent({
       exchange() {
         userRouter.push("/points");
       },
+    });
+    onMounted(() => {
+      console.log("home", getPcMsg);
     });
     return {
       ...toRefs(state),
