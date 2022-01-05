@@ -16,14 +16,13 @@
 
 <script>
 import { defineComponent, reactive, toRefs, onMounted, toRaw } from "vue";
-import { realTimePrice, buy } from "../../utils/price.js";
+import { buy } from "../../utils/price.js";
 const { ipcRenderer } = window.electron;
 
 export default defineComponent({
   name: "PreemptivePreSale",
   setup() {
     const state = reactive({
-      windowTimer: null,
       logList: [],
       option: {},
       taskError(err) {
@@ -35,10 +34,6 @@ export default defineComponent({
 
         ipcRenderer.send("pre-sale-echo", {
           data: toRaw(state.logList),
-        });
-
-        ipcRenderer.send("open-pre-sale", {
-          isClose: false,
         });
       },
     });
@@ -56,16 +51,11 @@ export default defineComponent({
         if (JSON.parse(localStorage.getItem("preSaleConfig"))) {
           state.option = JSON.parse(localStorage.getItem("preSaleConfig"));
 
-          // 流动性
-          let mobility;
-          try {
-            mobility = (await realTimePrice(state.option)).coinValue;
-          } catch (err) {
-            state.taskError(err);
-          }
+          let time = new Date().getTime();
+          let flow = new Date(state.option.date).getTime();
+          const start = flow - time;
 
-          // 池子流动，任务启动
-          if (mobility > 0) {
+          let timer = setTimeout(async () => {
             try {
               const isBuy = await buy(state.option);
 
@@ -82,11 +72,14 @@ export default defineComponent({
                 ipcRenderer.send("pre-sale-echo", {
                   data: toRaw(state.logList),
                 });
+
+                clearTimeout(timer);
+                timer = null;
               }
             } catch (err) {
               state.taskError(err);
             }
-          }
+          }, start);
         }
       });
       Listener();

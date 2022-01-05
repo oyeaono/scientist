@@ -73,7 +73,12 @@
           <!--          <svg-icon icon-class="setting-tip"></svg-icon>-->
         </div>
         <div class="item">
-          <q-input v-model="poll" label="轮询时间(单位: 秒)" :dense="dense" />
+          <q-input
+            v-model="date"
+            label="开盘时间"
+            :dense="dense"
+            :shadow-text="timeTip"
+          />
           <!--          <svg-icon icon-class="setting-tip"></svg-icon>-->
         </div>
         <div class="item">
@@ -109,7 +114,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, onMounted } from "vue";
+import { defineComponent, reactive, toRefs, onMounted, watch } from "vue";
 import { Dialog } from "quasar";
 const { ipcRenderer } = window.electron;
 
@@ -125,12 +130,13 @@ export default defineComponent({
       options: ["BSC"],
       dense: false,
       contractAddress: "",
-      poll: "",
+      date: "",
       amount: "",
       sellOut: "",
       option: {},
       gas: "",
       batch: true,
+      timeTip: "2022/1/1 23:00",
       openSetting() {
         state.settingShow = true;
         state.showSetting();
@@ -200,7 +206,7 @@ export default defineComponent({
         state.option.privateKey = JSON.parse(
           localStorage.getItem("privateKey")
         ).privateKey;
-        state.option.poll = Number(state.poll);
+        state.option.date = state.date;
         localStorage.setItem("preSaleConfig", JSON.stringify(state.option));
         console.log("option", state.option);
       },
@@ -248,6 +254,17 @@ export default defineComponent({
         }
       },
     });
+    watch(
+      () => state.date,
+      (n) => {
+        console.log("n", n);
+        if (n) {
+          state.timeTip = "";
+        } else {
+          state.timeTip = "2022/1/1 23:00";
+        }
+      }
+    );
     onMounted(() => {
       console.log("抢预售");
 

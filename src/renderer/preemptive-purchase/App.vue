@@ -44,10 +44,6 @@ export default defineComponent({
         ipcRenderer.send("preempt-echo", {
           data: toRaw(state.logList),
         });
-
-        ipcRenderer.send("open-preempt", {
-          isClose: false,
-        });
       },
       async toSale() {
         try {
@@ -72,15 +68,18 @@ export default defineComponent({
     });
     watch(
       () => state.balance,
-      () => {
-        let timer = setTimeout(async () => {
-          let salePrice = await realTimePrice(state.option).value;
-          if (salePrice >= state.balance * state.option.sellOut) {
-            await state.toSale();
-          }
-          clearTimeout(timer);
-          timer = null;
-        }, 1000);
+      (n) => {
+        // 钱包币余额大于0,轮询实时价格
+        if (n > 0) {
+          let timer = setTimeout(async () => {
+            let salePrice = await realTimePrice(state.option).value;
+            if (salePrice >= state.balance * state.option.sellOut) {
+              await state.toSale();
+            }
+            clearTimeout(timer);
+            timer = null;
+          }, 1000);
+        }
       }
     );
     onMounted(() => {
@@ -122,12 +121,14 @@ export default defineComponent({
                   );
 
                   state.balance = await realTimePrice(state.option).value;
+
+                  // 购买成功清空定时器
+                  clearTimeout(timer);
+                  timer = null;
                 }
               } catch (err) {
                 state.taskError(err);
               }
-              clearTimeout(timer);
-              timer = null;
             }, start);
           } else {
             state.windowTimer = setInterval(async () => {
@@ -148,6 +149,10 @@ export default defineComponent({
                     );
 
                     state.balance = await realTimePrice(state.option).value;
+
+                    // 购买成功清空定时器
+                    clearTimeout(state.windowTimer);
+                    state.windowTimer = null;
                   }
                 } catch (err) {
                   state.taskError(err);
