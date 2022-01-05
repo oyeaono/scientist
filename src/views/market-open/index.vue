@@ -72,8 +72,17 @@
           <q-input v-model="contractAddress" label="合约地址" :dense="dense" />
           <!--          <svg-icon icon-class="setting-tip"></svg-icon>-->
         </div>
-        <div class="item">
+        <div class="item" v-if="mode">
           <q-input v-model="poll" label="轮询时间(单位: 秒)" :dense="dense" />
+          <!--          <svg-icon icon-class="setting-tip"></svg-icon>-->
+        </div>
+        <div class="item" v-else>
+          <q-input
+            v-model="date"
+            label="开盘时间"
+            :dense="dense"
+            :shadow-text="timeTip"
+          />
           <!--          <svg-icon icon-class="setting-tip"></svg-icon>-->
         </div>
         <div class="item">
@@ -97,13 +106,7 @@
           <!--          <svg-icon icon-class="setting-tip"></svg-icon>-->
         </div>
         <div class="item">
-          <q-input
-            v-model="date"
-            label="开盘时间"
-            :dense="dense"
-            shadow-text="2022/1/1 23:00"
-          />
-          <!--          <svg-icon icon-class="setting-tip"></svg-icon>-->
+          <q-toggle v-model="mode" color="black" label="轮询" left-label />
         </div>
         <q-btn
           label="保存"
@@ -118,7 +121,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, onMounted } from "vue";
+import { defineComponent, reactive, toRefs, onMounted, watch } from "vue";
 import { Dialog } from "quasar";
 const { ipcRenderer } = window.electron;
 
@@ -141,6 +144,8 @@ export default defineComponent({
       option: {},
       batch: true,
       date: "",
+      timeTip: "2022/1/1 23:00",
+      mode: false,
       openSetting() {
         state.settingShow = true;
         state.showSetting();
@@ -186,10 +191,6 @@ export default defineComponent({
           state.emptyTip("填写合约地址");
           return;
         }
-        if (!state.poll) {
-          state.emptyTip("填写轮询时间");
-          return;
-        }
         if (!state.slipPoint) {
           state.emptyTip("填写滑点");
           return;
@@ -197,6 +198,17 @@ export default defineComponent({
         if (!state.amount) {
           state.emptyTip("填写买入数量");
           return;
+        }
+        if (state.mode) {
+          if (!state.poll) {
+            state.emptyTip("填写轮询时间");
+            return;
+          }
+        } else {
+          if (!state.date) {
+            state.emptyTip("填写开盘时间");
+            return;
+          }
         }
         state.selectNetWork();
         state.settingShow = false;
@@ -207,6 +219,8 @@ export default defineComponent({
         state.option.amount = state.amount;
         state.option.sellOut = state.sellOut;
         state.option.batch = state.batch;
+        state.option.date = state.date;
+        state.option.mode = state.mode;
         state.option.privateKey = JSON.parse(
           localStorage.getItem("privateKey")
         ).privateKey;
@@ -263,6 +277,17 @@ export default defineComponent({
         }
       },
     });
+    watch(
+      () => state.date,
+      (n) => {
+        console.log("n", n);
+        if (n) {
+          state.timeTip = "";
+        } else {
+          state.timeTip = "2022/1/1 23:00";
+        }
+      }
+    );
     onMounted(() => {
       console.log("抢开盘");
 

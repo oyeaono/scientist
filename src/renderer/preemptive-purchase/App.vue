@@ -15,8 +15,15 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, onMounted, toRaw } from "vue";
-import { realTimePrice, buy } from "../../utils/price.js";
+import {
+  defineComponent,
+  reactive,
+  toRefs,
+  onMounted,
+  toRaw,
+  watch,
+} from "vue";
+import { realTimePrice, buy, sale } from "../../utils/price.js";
 const { ipcRenderer } = window.electron;
 
 export default defineComponent({
@@ -26,6 +33,7 @@ export default defineComponent({
       windowTimer: null,
       logList: [],
       option: {},
+      balance: "",
       taskError(err) {
         localStorage.setItem("errLog", JSON.stringify(err));
         state.logList.unshift("任务出错,设置正确的参数...");
@@ -41,7 +49,40 @@ export default defineComponent({
           isClose: false,
         });
       },
+      async toSale() {
+        try {
+          await sale(state.option);
+
+          state.logList.push("卖出成功...");
+
+          localStorage.setItem("preempt", JSON.stringify(state.logList));
+
+          ipcRenderer.send("preempt-echo", {
+            data: toRaw(state.logList),
+          });
+
+          // 关闭窗口
+          ipcRenderer.send("open-preempt", {
+            isClose: false,
+          });
+        } catch (err) {
+          state.taskError(err);
+        }
+      },
     });
+    watch(
+      () => state.balance,
+      () => {
+        let timer = setTimeout(async () => {
+          let salePrice = await realTimePrice(state.option).value;
+          if (salePrice >= state.balance * state.option.sellOut) {
+            await state.toSale();
+          }
+          clearTimeout(timer);
+          timer = null;
+        }, 1000);
+      }
+    );
     onMounted(() => {
       console.log("抢开盘隐藏窗口");
       const Listener = window.ipc.on("PreemptivePurchase", async () => {
@@ -62,36 +103,57 @@ export default defineComponent({
             localStorage.getItem("preemptivePurchaseConfig")
           );
 
-          // 流动性
-          let mobility;
-          try {
-            mobility = (await realTimePrice(state.option)).coinValue;
-          } catch (err) {
-            state.taskError(err);
-          }
+          // 定时任务
+          if (!state.option.mode) {
+            let time = new Date().getTime();
+            let flow = new Date(state.option.date).getTime();
+            const start = flow - time;
 
-          // 池子流动，任务启动
-          if (mobility > 0) {
-            try {
-              const isBuy = await buy(state.option);
+            let timer = setTimeout(async () => {
+              try {
+                const isBuy = await buy(state.option);
 
-              if (isBuy) {
-                state.logList.push("购买成功...");
-                state.logList.push("任务完成...");
-                localStorage.setItem("preempt", JSON.stringify(state.logList));
+                if (isBuy) {
+                  state.logList.push("购买成功...");
+                  state.logList.push("任务完成...");
+                  localStorage.setItem(
+                    "preempt",
+                    JSON.stringify(state.logList)
+                  );
 
-                // 关闭窗口
-                ipcRenderer.send("open-preempt", {
-                  isClose: false,
-                });
-
-                ipcRenderer.send("preempt-echo", {
-                  data: toRaw(state.logList),
-                });
+                  state.balance = await realTimePrice(state.option).value;
+                }
+              } catch (err) {
+                state.taskError(err);
               }
-            } catch (err) {
-              state.taskError(err);
-            }
+              clearTimeout(timer);
+              timer = null;
+            }, start);
+          } else {
+            state.windowTimer = setInterval(async () => {
+              // 流动性
+              const mobility = (await realTimePrice(state.option)).coinValue;
+
+              // 池子流动，任务启动
+              if (mobility > 0) {
+                try {
+                  const isBuy = await buy(state.option);
+
+                  if (isBuy) {
+                    state.logList.push("购买成功...");
+                    state.logList.push("任务完成...");
+                    localStorage.setItem(
+                      "preempt",
+                      JSON.stringify(state.logList)
+                    );
+
+                    state.balance = await realTimePrice(state.option).value;
+                  }
+                } catch (err) {
+                  state.taskError(err);
+                }
+              }
+            }, Number(state.option.poll) * 1000);
           }
         }
       });
