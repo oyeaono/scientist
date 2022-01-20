@@ -36,7 +36,6 @@ for (let key in service) {
       api.method === "patch"
     ) {
       try {
-        console.log("a", process.env.VUE_APP_BASE_URL);
         response = await instance[api.method](api.url, newParams, config);
       } catch (err) {
         response = err;

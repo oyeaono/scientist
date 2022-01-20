@@ -46,6 +46,7 @@ class invitationCodeWindow {
     this.invitationCodeWindow.on("closed", () => {
       this.invitationCodeWindow = null;
     });
+    this.invitationCodeWindow.webContents.openDevTools();
     // if (!app.isPackaged) {
     //   // if on DEV or Production with debug enabled
     //   this.invitationCodeWindow.webContents.openDevTools();
