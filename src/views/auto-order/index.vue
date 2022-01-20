@@ -359,6 +359,8 @@ export default defineComponent({
           console.log("写入成功");
         }
       );
+      // exe文件的目录
+      // path.dirname(app.getPath("exe"));
 
       const Listener = window.ipc.on("echo-price", (data) => {
         state.logList = data;
