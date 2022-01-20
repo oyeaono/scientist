@@ -141,6 +141,7 @@ const { ipcRenderer } = window.electron;
 // import { Run, coinBalance } from "../../utils/price.js";
 // import { ethers } from "ethers";
 // import Web3 from "web3";
+const fs = window.fs;
 
 export default defineComponent({
   name: "AutoOrder",
@@ -348,6 +349,16 @@ export default defineComponent({
       const a =
         await instance.appContext.config.globalProperties.$Http.setMealList();
       console.log("a", a);
+
+      fs.fs.writeFile(
+        "cdk.txt",
+        JSON.stringify({ cdk: "abcdefg" }),
+        "utf-8",
+        (err) => {
+          if (err) throw err;
+          console.log("写入成功");
+        }
+      );
 
       const Listener = window.ipc.on("echo-price", (data) => {
         state.logList = data;

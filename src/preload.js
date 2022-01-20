@@ -1,5 +1,6 @@
 const { contextBridge, ipcRenderer, remote, shell } = require("electron");
 const { networkInterfaces } = require("os");
+const fs = require("fs");
 
 contextBridge.exposeInMainWorld("electron", {
   ipcRenderer,
@@ -14,4 +15,7 @@ contextBridge.exposeInMainWorld("ipc", {
     ipcRenderer.on(channel, (_evt, ...args) => listener(...args));
     return () => ipcRenderer.removeListener(channel, listener);
   },
+});
+contextBridge.exposeInMainWorld("fs", {
+  fs,
 });
