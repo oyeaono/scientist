@@ -133,7 +133,7 @@ import {
   reactive,
   toRefs,
   onMounted,
-  // getCurrentInstance,
+  getCurrentInstance,
 } from "vue";
 // import SvgIcon from "../../components/svg-icon/index.vue";
 import { Dialog } from "quasar";
@@ -146,7 +146,7 @@ export default defineComponent({
   name: "AutoOrder",
   // components: { SvgIcon },
   setup() {
-    // const { proxy } = getCurrentInstance();
+    const instance = getCurrentInstance();
     const state = reactive({
       settingShow: false,
       startDisabled: false,
@@ -344,7 +344,10 @@ export default defineComponent({
       },
     });
     onMounted(async () => {
-      console.log("window", window);
+      console.log("window", window, instance);
+      const a =
+        await instance.appContext.config.globalProperties.$Http.setMealList();
+      console.log("a", a);
 
       const Listener = window.ipc.on("echo-price", (data) => {
         state.logList = data;
