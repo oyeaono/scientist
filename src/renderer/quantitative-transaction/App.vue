@@ -75,7 +75,6 @@ export default defineComponent({
             } catch (err) {
               state.taskError(err);
             }
-            console.log("price", price, typeof price);
             state.logList.unshift(`${price} BNB / ${unit}`);
             localStorage.setItem("price", JSON.stringify(state.logList));
 

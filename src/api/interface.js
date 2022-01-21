@@ -5,7 +5,7 @@ const interface_API = {
     url: "/user/checkPassword",
   },
   // 解锁密码和pc唯一端地址
-  deviceBinding: {
+  deviceUnlock: {
     method: "post",
     url: "/user/unlockPasswordForPc",
   },

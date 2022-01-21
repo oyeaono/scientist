@@ -121,7 +121,6 @@ export const realTimePrice = async (option) => {
 // 获取钱包币余额
 export const coinBalance = async (option) => {
   const run = new Run(option);
-  console.log("pair", run.pair());
   let balance = await run.contractCoin.balanceOf(run.pair());
   // let balance = await run.contractCoin.balanceOf(run.wallet.address);
   const len = await run.decimals();
@@ -162,15 +161,12 @@ export const buy = async (option) => {
         .integerValue()
         .toString(16);
   }
-  console.log("amountOutMin", amountOutMin);
 
   // 计算gas费
   const gas = option.gas ? (Number(option.gas) * 5).toString() : "5.0";
-  console.log("gas", gas);
 
   // nonce
   let nonce = await run.wallet.getTransactionCount();
-  console.log("nonce", nonce);
 
   // 最小代币数量: 输入 * (1 - 滑点)
   // path: [bnb, 币]
@@ -216,11 +212,9 @@ export const sale = async (option) => {
 
   // 币价
   const coinPrice = (await realTimePrice(option)).params;
-  console.log("sale coinPrice", coinPrice, typeof coinPrice);
 
   // 币余额
   let amountIn = (await coinBalance(option)).params;
-  console.log("sale tokenBalance", amountIn, typeof amountIn);
 
   // 输出
   const amountOutMin =
@@ -231,11 +225,9 @@ export const sale = async (option) => {
       .times(1 - option.slipPoint * 0.01)
       .integerValue()
       .toString(16);
-  console.log("sale amountOutMin", amountOutMin, typeof amountOutMin);
 
   // 输入
   amountIn = "0x" + amountIn.times(1e18).toString(16);
-  console.log("sale tokenBalance1", amountIn, typeof amountIn);
 
   // 地址对
   const path = [option.contractAddress, process.env.VUE_APP_BNB];
@@ -255,9 +247,6 @@ export const sale = async (option) => {
     "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
   );
 
-  console.log("精度", (await run.decimals()).toString());
-  console.log("上限", (await run.allowance()).toString());
-
   // 卖出
   // 卖出代币数量
   // 最小卖出eth金额
@@ -265,7 +254,7 @@ export const sale = async (option) => {
   // 接收地址
   // 最后期限
   // gas费
-  const sale = await run.contractRouter01.swapExactTokensForETH(
+  await run.contractRouter01.swapExactTokensForETH(
     amountIn,
     amountOutMin,
     path,
@@ -273,5 +262,4 @@ export const sale = async (option) => {
     new Date().getTime(),
     gas
   );
-  console.log("sale", sale);
 };

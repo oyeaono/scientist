@@ -1,13 +1,12 @@
-const { ipcRenderer } = window.electron;
-
 window.onload = () => {
   console.clear();
 
   let MAX_LIFE = 50;
-  let canvas = document.querySelector("canvas");
+  // let canvas = document.querySelector("canvas");
   let input = document.querySelector("input");
   let field = {};
-  let hasFocus = false;
+  // eslint-disable-next-line no-unused-vars
+  var hasFocus = false;
   let caret = document.createElement("span");
   caret.style.cssText = document.defaultView.getComputedStyle(
     input,
@@ -148,7 +147,7 @@ window.onload = () => {
     afterPaint: function () {
       // nothing
     },
-    action: function (x, y) {
+    action: function () {
       caret.textContent = input.value;
 
       burst.call(this, 10);
@@ -164,7 +163,7 @@ window.onload = () => {
   /**
    * Constants
    */
-  let PI_2 = Math.PI / 2;
+  // let PI_2 = Math.PI / 2;
   let PI_180 = Math.PI / 180;
 
   /**
@@ -274,7 +273,7 @@ window.onload = () => {
     },
     rotate: function (degrees) {
       let magnitude = this.magnitude;
-      let angle = (Math.atan2(this._x, this._y) * PI_HALF + degrees) * PI_180;
+      let angle = (Math.atan2(this._x, this._y) + degrees) * PI_180;
       this._x = magnitude * Math.cos(angle);
       this._y = magnitude * Math.sin(angle);
     },
@@ -539,6 +538,7 @@ window.onload = () => {
       };
 
       this.behavior = {
+        // eslint-disable-next-line no-unused-vars
         cohesion: function (range, speed) {
           range = Math.pow(range || 100, 2);
           speed = speed || 0.001;
@@ -694,14 +694,14 @@ window.onload = () => {
               }
 
               // calculate force vector
-              if (
-                Vector.distanceSquared(particle.position, neighbour.position) <
-                  2 &&
-                particle.size >= neighbour.size
-              ) {
-                particle.size += neighbour.size;
-                destroy(neighbour);
-              }
+              // if (
+              //   Vector.distanceSquared(particle.position, neighbour.position) <
+              //     2 &&
+              //   particle.size >= neighbour.size
+              // ) {
+              //   particle.size += neighbour.size;
+              //   destroy(neighbour);
+              // }
             }
           };
         },
@@ -726,7 +726,7 @@ window.onload = () => {
             let i = 0;
             let l = particles.length;
             let distance;
-            let pull;
+            // let pull;
             let attractor;
             let grouping = groups.length;
 
@@ -808,7 +808,7 @@ window.onload = () => {
         edge: function (action) {
           return function (particle) {
             let position = particle.position;
-            let velocity = particle.velocity;
+            // let velocity = particle.velocity;
             let radius = particle.size * 0.5;
 
             if (position.x + radius > canvas.width) {
@@ -872,12 +872,7 @@ window.onload = () => {
 
   btn.onclick = () => {
     const value = document.getElementById("input").value;
-    console.log("value", value, document.getElementById("input").value);
-    if (value) {
-      ipcRenderer.send("submit-code", {
-        isClose: true,
-      });
-    } else {
+    if (!value) {
       alert("请输入邀请码");
     }
   };

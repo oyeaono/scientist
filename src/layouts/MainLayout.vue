@@ -54,10 +54,6 @@
       prevent-close
       no-esc-dismiss
       no-backdrop-dismiss
-      @ok="onOk"
-      @cancel="onCancel"
-      @show="onShow"
-      @hide="onHide"
       persistent
       transition-show="flip-down"
     >
@@ -136,15 +132,21 @@ const linksList = [
     link: "/pre-sale",
   },
   {
-    title: "积分",
+    title: "积分兑换",
     caption: "quasar.dev",
     icon: "",
     link: "/points",
   },
+  {
+    title: "解锁设备",
+    caption: "quasar.dev",
+    icon: "",
+    link: "/unlock",
+  },
 ];
 
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
-import { useStore } from "vuex";
+// import { useStore } from "vuex";
 import SvgIcon from "../components/svg-icon/index.vue";
 const { ipcRenderer } = window.electron;
 
@@ -157,7 +159,7 @@ export default defineComponent({
   },
 
   setup() {
-    const store = useStore();
+    // const store = useStore();
     const state = reactive({
       privateKey: "",
       password: "",
@@ -170,24 +172,6 @@ export default defineComponent({
       toggleLeftDrawer() {
         // 查询是否激活，激活功能解锁
         state.leftDrawerOpen = !state.leftDrawerOpen;
-      },
-      onOk() {
-        console.log("onOk");
-      },
-
-      // 当props.cancel()被调用
-      onCancel() {
-        console.log("onCancel");
-      },
-
-      // 当我们展示给用户时
-      onShow() {
-        console.log("onShow");
-      },
-
-      // 当它被隐藏时
-      onHide() {
-        console.log("onHide");
       },
       openConnectWallet() {
         state.walletShow = true;
@@ -253,8 +237,6 @@ export default defineComponent({
         state.privateKey = conf.privateKey;
         state.password = conf.password;
         state.confirmPassword = conf.password;
-      } else {
-        store.commit("setIsActivation", true);
       }
     });
     return {

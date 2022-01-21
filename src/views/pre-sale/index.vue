@@ -208,7 +208,6 @@ export default defineComponent({
         ).privateKey;
         state.option.date = state.date;
         localStorage.setItem("preSaleConfig", JSON.stringify(state.option));
-        console.log("option", state.option);
       },
       emptyTip(msg) {
         Dialog.create({
@@ -257,7 +256,6 @@ export default defineComponent({
     watch(
       () => state.date,
       (n) => {
-        console.log("n", n);
         if (n) {
           state.timeTip = "";
         } else {

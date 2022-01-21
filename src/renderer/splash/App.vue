@@ -18,16 +18,10 @@
 <script>
 import { defineComponent } from "vue";
 const { ipcRenderer } = window.electron;
-// import { useStore } from "vuex";
 
 export default defineComponent({
   name: "Splash",
   mounted() {
-    // localStorage.clear()
-    // const store = useStore();
-    // 查询是否激活
-    // store.commit("setIsActivation", false)
-    console.log("x", ipcRenderer);
     ipcRenderer.send("splash-finish", {
       isClose: true,
     });

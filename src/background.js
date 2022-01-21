@@ -19,7 +19,6 @@ const AutoOrderWindow = require("./controllers/auto-order");
 const PreemptivePurchaseWindow = require("./controllers/preemptive-purchase");
 const PreSaleWindow = require("./controllers/pre-sale");
 const SphericalMenuWindow = require("./controllers/spherical-menu");
-let invitationCode = "";
 // 防止系统托盘被辣鸡回收干掉
 let appTray = null;
 const trayImg = app.isPackaged
@@ -129,9 +128,18 @@ class Scientist {
       this.createMainWindow();
     });
 
+    // cdk和机器码校验不通过
+    ipcMain.on("valid-error", (e, res) => {
+      if (res.isClose) {
+        this.mainWindow.hide();
+        this.createInvitationCodeWindow();
+        this.invitationCodeWindow.show();
+      }
+    });
+
     // 主程加载完
     ipcMain.on("main-finish", (e, res) => {
-      if (res.isClose && !invitationCode) {
+      if (res.isClose) {
         let timer = setTimeout(() => {
           this.splashWindow.hide();
           if (this.invitationCodeWindow) {
@@ -144,9 +152,12 @@ class Scientist {
     });
 
     // 提交邀请码
-    ipcMain.on("submit-code", (e, res) => {
-      invitationCode = res.isClose;
+    ipcMain.on("invitation-code-finish", (e, res) => {
       if (res.isClose) {
+        // 开启定时检测
+        this.mainWindow.sendMsg("start-check", {
+          isClose: true,
+        });
         this.mainWindow.show();
         if (this.invitationCodeWindow) {
           this.invitationCodeWindow.closeWin();
@@ -218,7 +229,6 @@ class Scientist {
             buttons: ["悬浮球", "直接退出"],
           })
           .then((res) => {
-            console.log("res", res);
             if (res.response === 0) {
               e.preventDefault(); // 阻止默认行为，一定要有
               this.mainWindow.hide(); // 调用 最小化实例方法

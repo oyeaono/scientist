@@ -1,5 +1,10 @@
 <template>
-  <q-item clickable tag="a" :disable="isActivation" @click="enterPath(link)">
+  <q-item
+    clickable
+    tag="a"
+    :disable="isActivation.value"
+    @click="enterPath(link)"
+  >
     <!--    <q-item-section-->
     <!--      v-if="icon"-->
     <!--      avatar-->

@@ -28,19 +28,6 @@ const routes = [
     ],
   },
   {
-    // 积分
-    path: "/points",
-    name: "Points",
-    component: () => import("../layouts/MainLayout.vue"),
-    children: [
-      {
-        path: "",
-        component: () =>
-          import(/* webpackChunkName: "Points" */ "../views/points/index.vue"),
-      },
-    ],
-  },
-  {
     // 抢开盘
     path: "/market-open",
     name: "MarketOpen",
@@ -67,6 +54,32 @@ const routes = [
           import(
             /* webpackChunkName: "PreSale" */ "../views/pre-sale/index.vue"
           ),
+      },
+    ],
+  },
+  {
+    // 积分
+    path: "/points",
+    name: "Points",
+    component: () => import("../layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "",
+        component: () =>
+          import(/* webpackChunkName: "Points" */ "../views/points/index.vue"),
+      },
+    ],
+  },
+  {
+    // 解锁设备
+    path: "/unlock",
+    name: "Unlock",
+    component: () => import("../layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "",
+        component: () =>
+          import(/* webpackChunkName: "Points" */ "../views/unlock/index.vue"),
       },
     ],
   },

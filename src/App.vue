@@ -10,38 +10,52 @@ import {
   onMounted,
   getCurrentInstance,
 } from "vue";
-
 const { ipcRenderer } = window.electron;
 import { useStore } from "vuex";
 import getPcMsg from "./utils/hardware.js";
+const fs = window.fs.fs;
 
 export default defineComponent({
   name: "App",
   setup() {
     const instance = getCurrentInstance();
     const store = useStore();
+    let timer = null;
     const state = reactive({
+      cdk: "",
       async timingDetection() {
         const res =
           await instance.appContext.config.globalProperties.$Http.timingDetection(
             {
-              password: "xx",
-              pcAddress: getPcMsg,
-            }
+              password: state.cdk,
+              pcAddress: getPcMsg.mac,
+            },
+            true
           );
-        if (res) {
-          store.commit("setIsActivation", false);
+        console.log("定时检测", res);
+        if (res.code !== 100000) {
+          store.commit("setIsActivation", true);
+          ipcRenderer.send("valid-error", {
+            isClose: true,
+          });
+          clearInterval(timer);
+          timer = null;
+          alert("授权失败");
         }
       },
     });
-    onMounted(async () => {
-      // localStorage.clear()
-      setInterval(() => {
-        state.timingDetection();
-      }, 300000);
-      console.log("store", store);
-      // 查询是否激活
-      // store.commit("setIsActivation", false)
+    onMounted(() => {
+      const Listener = window.ipc.on("start-check", (data) => {
+        if (data.isClose) {
+          timer = setInterval(() => {
+            state.cdk = fs.readFileSync("cdk.txt", "utf-8");
+            console.log("cdk", state.cdk);
+            state.timingDetection();
+          }, 10000);
+        }
+      });
+      Listener();
+
       ipcRenderer.send("main-finish", {
         isClose: true,
       });
