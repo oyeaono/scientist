@@ -218,7 +218,6 @@ export default defineComponent({
           return;
         }
         state.walletShow = false;
-        store.commit("setIsActivation", false);
         localStorage.setItem(
           "privateKey",
           JSON.stringify({
@@ -249,7 +248,6 @@ export default defineComponent({
     onMounted(() => {
       if (JSON.parse(localStorage.getItem("privateKey"))) {
         const conf = JSON.parse(localStorage.getItem("privateKey"));
-        store.commit("setIsActivation", false);
         state.tgUserName = conf.tgUserName;
         state.tgID = conf.tgID;
         state.privateKey = conf.privateKey;
