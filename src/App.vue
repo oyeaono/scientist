@@ -40,7 +40,6 @@ export default defineComponent({
           });
           clearInterval(timer);
           timer = null;
-          alert("授权失败");
         }
       },
     });
@@ -48,9 +47,16 @@ export default defineComponent({
       const Listener = window.ipc.on("start-check", (data) => {
         if (data.isClose) {
           timer = setInterval(() => {
-            state.cdk = fs.readFileSync("cdk.txt", "utf-8");
+            try {
+              state.cdk = fs.readFileSync("cdk.txt", "utf-8");
+              state.timingDetection();
+            } catch (e) {
+              store.commit("setIsActivation", true);
+              ipcRenderer.send("valid-error", {
+                isClose: true,
+              });
+            }
             console.log("cdk", state.cdk);
-            state.timingDetection();
           }, 10000);
         }
       });
