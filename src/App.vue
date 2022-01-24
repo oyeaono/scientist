@@ -57,18 +57,20 @@ export default defineComponent({
       },
     });
     onMounted(() => {
-      try {
-        console.log("App");
-        state.cdk = fs.readFileSync("cdk.txt", "utf-8");
-        state.timingDetection();
-      } catch (e) {
-        store.commit("setIsActivation", true);
-        ipcRenderer.send("valid-error", {
-          isClose: true,
-        });
-      }
       const Listener = window.ipc.on("start-check", (data) => {
         if (data.isClose) {
+          try {
+            console.log("App");
+            state.cdk = fs.readFileSync("cdk.txt", "utf-8");
+            if (state.cdk) {
+              state.timingDetection();
+            }
+          } catch (e) {
+            store.commit("setIsActivation", true);
+            ipcRenderer.send("valid-error", {
+              isClose: true,
+            });
+          }
           timer = setInterval(() => {
             try {
               state.cdk = fs.readFileSync("cdk.txt", "utf-8");

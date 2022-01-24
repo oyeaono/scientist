@@ -19,6 +19,7 @@ const AutoOrderWindow = require("./controllers/auto-order");
 const PreemptivePurchaseWindow = require("./controllers/preemptive-purchase");
 const PreSaleWindow = require("./controllers/pre-sale");
 const SphericalMenuWindow = require("./controllers/spherical-menu");
+const fs = require("fs");
 // 防止系统托盘被辣鸡回收干掉
 let appTray = null;
 const trayImg = app.isPackaged
@@ -123,9 +124,26 @@ class Scientist {
       this.tray();
     });
     app.on("ready", () => {
-      this.createSplashWindow();
-      this.createInvitationCodeWindow();
-      this.createMainWindow();
+      fs.access("cdk.txt", (err) => {
+        console.log("err", err);
+        if (err) {
+          this.createSplashWindow();
+          this.createInvitationCodeWindow();
+          this.createMainWindow();
+        } else {
+          this.createSplashWindow();
+          let timer1 = setTimeout(() => {
+            this.createMainWindow();
+            clearTimeout(timer1);
+            timer1 = null;
+          }, 2000);
+          let timer2 = setTimeout(() => {
+            this.mainWindow.show();
+            clearTimeout(timer2);
+            timer2 = null;
+          }, 3000);
+        }
+      });
     });
 
     // cdk和机器码校验不通过
@@ -140,14 +158,10 @@ class Scientist {
     // 主程加载完
     ipcMain.on("main-finish", (e, res) => {
       if (res.isClose) {
-        let timer = setTimeout(() => {
-          this.splashWindow.hide();
-          if (this.invitationCodeWindow) {
-            this.invitationCodeWindow.show();
-          }
-          clearTimeout(timer);
-          timer = null;
-        }, 3000);
+        this.splashWindow.hide();
+        if (this.invitationCodeWindow) {
+          this.invitationCodeWindow.show();
+        }
       }
     });
 

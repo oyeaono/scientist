@@ -42,7 +42,6 @@ export default defineComponent({
         console.log("登录", res);
         if (res.code === 100000) {
           console.log("state.cdk", state.cdk);
-          // store.commit("setIsActivation", false);
           fs.writeFile("cdk.txt", state.cdk, "utf-8", (err) => {
             if (err) throw err;
           });
