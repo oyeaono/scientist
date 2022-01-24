@@ -1,5 +1,6 @@
 const { contextBridge, ipcRenderer, remote, shell } = require("electron");
 const { networkInterfaces } = require("os");
+const { dialog } = require("electron").remote;
 const fs = require("fs");
 
 contextBridge.exposeInMainWorld("electron", {
@@ -18,4 +19,7 @@ contextBridge.exposeInMainWorld("ipc", {
 });
 contextBridge.exposeInMainWorld("fs", {
   fs,
+});
+contextBridge.exposeInMainWorld("tc", {
+  dialog,
 });

@@ -17,17 +17,21 @@ import "./utils/index";
 const { ipcRenderer } = window.electron;
 import getPcMsg from "../../utils/hardware.js";
 import Http from "../../api/index.js";
-import { useStore } from "vuex";
 const fs = window.fs.fs;
+const dialog = window.tc.dialog;
 
 export default defineComponent({
   name: "InvitationCode",
   setup() {
-    const store = useStore();
     const state = reactive({
       cdk: "",
       duration: 100,
       async login() {
+        console.log("w", window);
+        if (!state.cdk) {
+          dialog.showErrorBox("", "输入邀请码");
+          return;
+        }
         const res = await Http.timingDetection(
           {
             password: state.cdk,
@@ -38,7 +42,7 @@ export default defineComponent({
         console.log("登录", res);
         if (res.code === 100000) {
           console.log("state.cdk", state.cdk);
-          store.commit("setIsActivation", false);
+          // store.commit("setIsActivation", false);
           fs.writeFile("cdk.txt", state.cdk, "utf-8", (err) => {
             if (err) throw err;
           });
@@ -46,7 +50,7 @@ export default defineComponent({
             isClose: true,
           });
         } else {
-          alert("激活码错误");
+          dialog.showErrorBox("", res.msg);
         }
       },
     });

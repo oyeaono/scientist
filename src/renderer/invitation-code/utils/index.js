@@ -867,13 +867,4 @@ window.onload = () => {
       });
     }
   }
-
-  const btn = document.getElementById("btn");
-
-  btn.onclick = () => {
-    const value = document.getElementById("input").value;
-    if (!value) {
-      alert("请输入邀请码");
-    }
-  };
 };

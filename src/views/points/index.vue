@@ -12,7 +12,7 @@
       <q-separator inset />
 
       <q-select
-        label="解锁功能"
+        label="兑换功能"
         transition-show="flip-up"
         transition-hide="flip-down"
         v-model="func"
@@ -75,13 +75,13 @@ export default defineComponent({
           state.emptyTip("选择功能");
           return;
         }
-        if (state.func === "自动挂单") {
+        if (state.func.indexOf("自动挂单") > -1) {
           state.id = state.funcData[0].id;
         }
-        if (state.func === "抢开盘") {
+        if (state.func.indexOf("抢开盘") > -1) {
           state.id = state.funcData[1].id;
         }
-        if (state.func === "抢预售") {
+        if (state.func.indexOf("抢预售") > -1) {
           state.id = state.funcData[2].id;
         }
         state.showExchange = true;
@@ -111,6 +111,8 @@ export default defineComponent({
         state.showExchange = false;
         if (res.code === 100000) {
           state.emptyTip("兑换成功");
+        } else {
+          state.emptyTip(res.msg);
         }
       },
       no() {
@@ -141,6 +143,8 @@ export default defineComponent({
         console.log("积分", res);
         if (res.code === 100000) {
           state.points = res.data;
+        } else {
+          state.emptyTip(res.msg);
         }
       },
     });

@@ -59,6 +59,14 @@ export default defineComponent({
             class: "tip",
             persistent: true,
           });
+        } else {
+          Dialog.create({
+            dark: true,
+            message: res.msg,
+            cancel: false,
+            class: "tip",
+            persistent: true,
+          });
         }
       },
       no() {},

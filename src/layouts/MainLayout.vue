@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          <span style="margin-left: 10%">scientist tool</span>
+          <span style="margin-left: 10%; font-size: 18px">巅峰科学家</span>
           <q-btn
             flat
             dense
@@ -38,9 +38,10 @@
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
         <EssentialLink
-          v-for="link in essentialLinks"
+          v-for="(link, index) in linksList"
           :key="link.title"
           v-bind="link"
+          :tabindex="index"
         />
       </q-list>
     </q-drawer>
@@ -105,48 +106,8 @@
 <script>
 import EssentialLink from "../components/EssentialLink.vue";
 import { Dialog } from "quasar";
-
-const linksList = [
-  {
-    title: "主界面",
-    caption: "quasar.dev",
-    icon: "",
-    link: "/",
-  },
-  {
-    title: "自动挂单",
-    caption: "quasar.dev",
-    icon: "",
-    link: "/auto-order",
-  },
-  {
-    title: "抢开盘",
-    caption: "quasar.dev",
-    icon: "",
-    link: "/market-open",
-  },
-  {
-    title: "抢预售",
-    caption: "quasar.dev",
-    icon: "",
-    link: "/pre-sale",
-  },
-  {
-    title: "积分兑换",
-    caption: "quasar.dev",
-    icon: "",
-    link: "/points",
-  },
-  {
-    title: "解锁设备",
-    caption: "quasar.dev",
-    icon: "",
-    link: "/unlock",
-  },
-];
-
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
-// import { useStore } from "vuex";
+import { useStore } from "vuex";
 import SvgIcon from "../components/svg-icon/index.vue";
 const { ipcRenderer } = window.electron;
 
@@ -159,7 +120,6 @@ export default defineComponent({
   },
 
   setup() {
-    // const store = useStore();
     const state = reactive({
       privateKey: "",
       password: "",
@@ -169,6 +129,7 @@ export default defineComponent({
       walletShow: false,
       tgUserName: "",
       tgID: "",
+      linksList: [],
       toggleLeftDrawer() {
         // 查询是否激活，激活功能解锁
         state.leftDrawerOpen = !state.leftDrawerOpen;
@@ -230,6 +191,7 @@ export default defineComponent({
       },
     });
     onMounted(() => {
+      state.linksList = useStore().state.app.linksList;
       if (JSON.parse(localStorage.getItem("privateKey"))) {
         const conf = JSON.parse(localStorage.getItem("privateKey"));
         state.tgUserName = conf.tgUserName;
@@ -241,7 +203,6 @@ export default defineComponent({
     });
     return {
       ...toRefs(state),
-      essentialLinks: linksList,
     };
   },
 });

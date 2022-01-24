@@ -1,10 +1,5 @@
 <template>
-  <q-item
-    clickable
-    tag="a"
-    :disable="isActivation.value"
-    @click="enterPath(link)"
-  >
+  <q-item clickable tag="a" :active="false" :disable="disabled" :to="link">
     <!--    <q-item-section-->
     <!--      v-if="icon"-->
     <!--      avatar-->
@@ -23,8 +18,7 @@
 </template>
 
 <script>
-import { defineComponent, computed, reactive, toRefs } from "vue";
-import { useStore } from "vuex";
+import { defineComponent, reactive, toRefs } from "vue";
 import SvgIcon from "./svg-icon/index.vue";
 
 export default defineComponent({
@@ -50,17 +44,22 @@ export default defineComponent({
       type: String,
       default: "",
     },
+
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+
+    tabindex: {
+      type: Number,
+      default: 0,
+    },
   },
   setup() {
-    const store = useStore();
     const state = reactive({
-      enterPath(link) {
-        this.$router.push({ path: link });
-      },
+      path: "",
     });
-
     return {
-      isActivation: computed(() => store.state.app.isActivation),
       ...toRefs(state),
     };
   },

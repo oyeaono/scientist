@@ -23,6 +23,7 @@ export default defineComponent({
     let timer = null;
     const state = reactive({
       cdk: "",
+      unlockData: [],
       async timingDetection() {
         const res =
           await instance.appContext.config.globalProperties.$Http.timingDetection(
@@ -40,10 +41,32 @@ export default defineComponent({
           });
           clearInterval(timer);
           timer = null;
+        } else {
+          res.data.forEach((item) => {
+            if (new Date(item.endTime) > new Date()) {
+              if (item.functionId === 1) {
+                store.commit("setAutoOrder", false);
+              } else if (item.functionId === 2) {
+                store.commit("setMarketOpen", false);
+              } else if (item.functionId === 3) {
+                store.commit("setPreSale", false);
+              }
+            }
+          });
         }
       },
     });
     onMounted(() => {
+      try {
+        console.log("App");
+        state.cdk = fs.readFileSync("cdk.txt", "utf-8");
+        state.timingDetection();
+      } catch (e) {
+        store.commit("setIsActivation", true);
+        ipcRenderer.send("valid-error", {
+          isClose: true,
+        });
+      }
       const Listener = window.ipc.on("start-check", (data) => {
         if (data.isClose) {
           timer = setInterval(() => {

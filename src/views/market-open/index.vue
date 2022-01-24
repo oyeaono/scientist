@@ -32,6 +32,12 @@
         :disable="logList.length === 0"
         @click="clearLog"
       />
+      <q-btn
+        label="抢开盘"
+        glossy
+        color="white"
+        style="margin: 20px 0 0 0; color: black !important"
+      />
     </div>
     <div class="right">
       <q-card class="transaction-msg">
