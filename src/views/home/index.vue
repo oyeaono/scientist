@@ -89,10 +89,16 @@ export default defineComponent({
       });
       return funName;
     });
-    onMounted(async () => {
-      state.cdk = fs.readFileSync("cdk.txt", "utf-8");
-      await state.getIntegral();
-      await state.login();
+    onMounted(() => {
+      fs.access("cdk.txt", fs.constants.F_OK, (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          state.cdk = fs.readFileSync("cdk.txt", "utf-8");
+          state.getIntegral();
+          state.login();
+        }
+      });
     });
     return {
       ...toRefs(state),
