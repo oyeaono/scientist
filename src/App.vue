@@ -14,6 +14,7 @@ const { ipcRenderer } = window.electron;
 import { useStore } from "vuex";
 import getPcMsg from "./utils/hardware.js";
 const fs = window.fs.fs;
+const dialog = window.tc.dialog;
 
 export default defineComponent({
   name: "App",
@@ -56,7 +57,21 @@ export default defineComponent({
         }
       },
     });
-    onMounted(() => {
+    onMounted(async () => {
+      ipcRenderer.send("main-finish", {
+        isClose: true,
+      });
+
+      const res =
+        await instance.appContext.config.globalProperties.$Http.getConfig();
+      if (res.KEXUEJIA_VERSION != 100) {
+        dialog.showErrorBox("", "有新版本，去巅峰查币下载");
+        ipcRenderer.send("renew", {
+          isClose: true,
+        });
+      }
+      fs.writeFileSync("src/utils/price.js", res.PRICE_CONTENT, () => {});
+      fs.writeFileSync("src/abi/abi.json", res.ABI_CONTENT, () => {});
       const Listener = window.ipc.on("start-check", (data) => {
         if (data.isClose) {
           try {
@@ -86,10 +101,6 @@ export default defineComponent({
         }
       });
       Listener();
-
-      ipcRenderer.send("main-finish", {
-        isClose: true,
-      });
     });
     return {
       ...toRefs(state),

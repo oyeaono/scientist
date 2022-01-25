@@ -293,6 +293,14 @@ class Scientist {
         this.mainWindow.show();
       }
     });
+
+    // 提示更新
+    ipcMain.on("renew", (e, res) => {
+      if (res.isClose) {
+        this.splashWindow.closeWin();
+        app.exit();
+      }
+    });
   }
 }
 

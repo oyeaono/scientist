@@ -110,6 +110,7 @@ import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import { useStore } from "vuex";
 import SvgIcon from "../components/svg-icon/index.vue";
 const { ipcRenderer } = window.electron;
+const fs = window.fs.fs;
 
 export default defineComponent({
   name: "MainLayout",
@@ -184,6 +185,8 @@ export default defineComponent({
       },
       shutDown() {
         localStorage.clear();
+        fs.writeFileSync("src/utils/price.js", "", () => {});
+        fs.writeFileSync("src/abi/abi.json", "", () => {});
 
         ipcRenderer.send("shut-down", {
           isClose: true,

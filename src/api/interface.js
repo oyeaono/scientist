@@ -24,6 +24,11 @@ const interface_API = {
     method: "post",
     url: "/user/getUserScoreInPc",
   },
+  // 获取数据
+  getConfig: {
+    method: "post",
+    url: "/user/getConfig",
+  },
 };
 
 export default interface_API;
