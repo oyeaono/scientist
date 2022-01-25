@@ -25,7 +25,7 @@ export default defineComponent({
     const state = reactive({
       cdk: "",
       unlockData: [],
-      async timingDetection() {
+      async checkHandle() {
         const res =
           await instance.appContext.config.globalProperties.$Http.timingDetection(
             {
@@ -78,7 +78,7 @@ export default defineComponent({
             console.log("App");
             state.cdk = fs.readFileSync("cdk.txt", "utf-8");
             if (state.cdk) {
-              state.timingDetection();
+              state.checkHandle();
             }
           } catch (e) {
             store.commit("setIsActivation", true);
@@ -89,7 +89,7 @@ export default defineComponent({
           timer = setInterval(() => {
             try {
               state.cdk = fs.readFileSync("cdk.txt", "utf-8");
-              state.timingDetection();
+              state.checkHandle();
             } catch (e) {
               store.commit("setIsActivation", true);
               ipcRenderer.send("valid-error", {

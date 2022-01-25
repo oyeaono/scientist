@@ -20,6 +20,8 @@ const PreemptivePurchaseWindow = require("./controllers/preemptive-purchase");
 const PreSaleWindow = require("./controllers/pre-sale");
 const SphericalMenuWindow = require("./controllers/spherical-menu");
 const fs = require("fs");
+import axios from "axios";
+const getPcMsg = require("./utils/main-hardware.js");
 // 防止系统托盘被辣鸡回收干掉
 let appTray = null;
 const trayImg = app.isPackaged
@@ -131,17 +133,34 @@ class Scientist {
           this.createInvitationCodeWindow();
           this.createMainWindow();
         } else {
-          this.createSplashWindow();
-          let timer1 = setTimeout(() => {
-            this.createMainWindow();
-            clearTimeout(timer1);
-            timer1 = null;
-          }, 2000);
-          let timer2 = setTimeout(() => {
-            this.mainWindow.show();
-            clearTimeout(timer2);
-            timer2 = null;
-          }, 3000);
+          const cdk = fs.readFileSync("cdk.txt", "utf-8");
+          axios
+            .post(
+              "https://test.hyiot.vip:7899/api/user/checkPassword",
+              `password=${cdk}&pcAddress=${getPcMsg.mac}`
+            )
+            .then((res) => {
+              if (res.data.code === 100000) {
+                this.createSplashWindow();
+                let timer1 = setTimeout(() => {
+                  this.createMainWindow();
+                  clearTimeout(timer1);
+                  timer1 = null;
+                }, 2000);
+                let timer2 = setTimeout(() => {
+                  this.mainWindow.show();
+                  this.mainWindow.sendMsg("start-check", {
+                    isClose: true,
+                  });
+                  clearTimeout(timer2);
+                  timer2 = null;
+                }, 3000);
+              } else {
+                fs.unlink("cdk.txt", () => {});
+                dialog.showErrorBox("", res.data.msg);
+              }
+            })
+            .catch(() => {});
         }
       });
     });
