@@ -26,7 +26,7 @@
         color="black"
         glossy
         label="兑换"
-        v-if="points > 0"
+        v-if="points > 50"
       />
       <q-btn @click="toTG" color="black" glossy label="获取积分" v-else />
     </q-card>
@@ -55,7 +55,7 @@ import {
   onMounted,
 } from "vue";
 import { Dialog } from "quasar";
-const { shell } = window.electron;
+// const { shell } = window.electron;
 const fs = window.fs.fs;
 
 export default defineComponent({
@@ -76,13 +76,13 @@ export default defineComponent({
           return;
         }
         if (state.func.indexOf("自动挂单") > -1) {
-          state.id = state.funcData[0].id;
+          state.id = state.funcData[0].functionId;
         }
         if (state.func.indexOf("抢开盘") > -1) {
-          state.id = state.funcData[1].id;
+          state.id = state.funcData[1].functionId;
         }
         if (state.func.indexOf("抢预售") > -1) {
-          state.id = state.funcData[2].id;
+          state.id = state.funcData[2].functionId;
         }
         state.showExchange = true;
       },
@@ -96,7 +96,8 @@ export default defineComponent({
         });
       },
       toTG() {
-        shell.openExternal("http://www.baidu.com");
+        // shell.openExternal("https://t.me/pinnacle_community");
+        state.emptyTip("积分不足，去社区发言获取积分");
       },
       async yes() {
         const res =
@@ -107,7 +108,7 @@ export default defineComponent({
             },
             true
           );
-        console.log("确定", res);
+        console.log("确定", res, state.cdk, state.id);
         state.showExchange = false;
         if (res.code === 100000) {
           state.emptyTip("兑换成功");
