@@ -1,6 +1,6 @@
 import axios from "axios";
 import service from "./interface.js";
-import { encryptDes, decryptDes } from "../utils/encryption.js";
+import { decryptDes } from "../utils/encryption.js";
 
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BASE_URL,
@@ -23,10 +23,10 @@ for (let key in service) {
     if (params && isFormData) {
       newParams = new FormData();
       for (let i in params) {
-        newParams.append(i, encryptDes(params[i], "DFSQDAOY"));
+        newParams.append(i, params[i]);
       }
     } else {
-      newParams = encryptDes(params, "DFSQDAOY");
+      newParams = params;
     }
     // 不同请求的判断
     let response = {}; // 请求的返回值
@@ -54,8 +54,6 @@ for (let key in service) {
 
 instance.interceptors.request.use(
   (config) => {
-    // config.data = encryptDes(config.data, "DFSQDAOY");
-    console.log("config", config);
     // 发起请求前做些什么
     return config;
   },

@@ -90,15 +90,21 @@ export default defineComponent({
       return funName;
     });
     onMounted(() => {
-      fs.access("cdk.txt", fs.constants.F_OK, (err) => {
-        if (err) {
-          console.log(err);
-        } else {
-          state.cdk = fs.readFileSync("cdk.txt", "utf-8");
-          state.getIntegral();
-          state.login();
+      const Listener = window.ipc.on("start-check", (data) => {
+        if (data.isClose) {
+          let timer = setTimeout(async () => {
+            state.cdk = fs.readFileSync("cdk.txt", "utf-8");
+            console.log("state.cdk", state.cdk);
+            if (state.cdk) {
+              await state.getIntegral();
+              await state.login();
+              clearTimeout(timer);
+              timer = null;
+            }
+          }, 500);
         }
       });
+      Listener();
     });
     return {
       ...toRefs(state),
