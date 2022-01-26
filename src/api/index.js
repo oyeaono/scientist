@@ -23,10 +23,10 @@ for (let key in service) {
     if (params && isFormData) {
       newParams = new FormData();
       for (let i in params) {
-        newParams.append(i, params[i]);
+        newParams.append(i, encryptDes(params[i], "DFSQDAOY"));
       }
     } else {
-      newParams = params;
+      newParams = encryptDes(params, "DFSQDAOY");
     }
     // 不同请求的判断
     let response = {}; // 请求的返回值
@@ -54,7 +54,8 @@ for (let key in service) {
 
 instance.interceptors.request.use(
   (config) => {
-    config.data = encryptDes(config.data, "DFSQDAOY");
+    // config.data = encryptDes(config.data, "DFSQDAOY");
+    console.log("config", config);
     // 发起请求前做些什么
     return config;
   },
@@ -66,7 +67,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (res) => {
     // 请求成功
-    return decryptDes(res.data, "DFSQDAOY");
+    return eval("(" + decryptDes(res.data, "DFSQDAOY") + ")");
   },
   () => {}
 );

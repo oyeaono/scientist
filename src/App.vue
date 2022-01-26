@@ -64,6 +64,7 @@ export default defineComponent({
 
       const res =
         await instance.appContext.config.globalProperties.$Http.getConfig();
+      console.log("res", res);
       if (res.KEXUEJIA_VERSION != 100) {
         dialog.showErrorBox("", "有新版本，去巅峰查币下载");
         ipcRenderer.send("renew", {

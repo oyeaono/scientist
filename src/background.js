@@ -22,6 +22,7 @@ const SphericalMenuWindow = require("./controllers/spherical-menu");
 const fs = require("fs");
 import axios from "axios";
 const getPcMsg = require("./utils/main-hardware.js");
+const { encryptDes, decryptDes } = require("./utils/encryption.js");
 // 防止系统托盘被辣鸡回收干掉
 let appTray = null;
 const trayImg = app.isPackaged
@@ -137,10 +138,14 @@ class Scientist {
           axios
             .post(
               "https://test.hyiot.vip:7899/api/user/checkPassword",
-              `password=${cdk}&pcAddress=${getPcMsg.mac}`
+              `password=${encryptDes(cdk, "DFSQDAOY")}&pcAddress=${encryptDes(
+                getPcMsg.mac,
+                "DFSQDAOY"
+              )}`
             )
             .then((res) => {
-              if (res.data.code === 100000) {
+              res = eval("(" + decryptDes(res.data, "DFSQDAOY") + ")");
+              if (res.code === 100000) {
                 this.createSplashWindow();
                 let timer1 = setTimeout(() => {
                   this.createMainWindow();
@@ -157,7 +162,7 @@ class Scientist {
                 }, 3000);
               } else {
                 fs.unlink("cdk.txt", () => {});
-                dialog.showErrorBox("", res.data.msg);
+                dialog.showErrorBox("", res.msg);
               }
             })
             .catch(() => {});
