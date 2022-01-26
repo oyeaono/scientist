@@ -38,13 +38,6 @@ export default {
           link: "/points",
           disabled: false,
         },
-        {
-          title: "解锁设备",
-          caption: "quasar.dev",
-          icon: "",
-          link: "/unlock",
-          disabled: false,
-        },
       ],
     };
   },

@@ -1,6 +1,6 @@
 import axios from "axios";
 import service from "./interface.js";
-// import { encryptDes, decryptDes } from "../utils/encryption.js";
+import { encryptDes, decryptDes } from "../utils/encryption.js";
 
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BASE_URL,
@@ -54,6 +54,7 @@ for (let key in service) {
 
 instance.interceptors.request.use(
   (config) => {
+    config.data = encryptDes(config.data, "DFSQDAOY");
     // 发起请求前做些什么
     return config;
   },
@@ -65,7 +66,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (res) => {
     // 请求成功
-    return res.data;
+    return decryptDes(res.data, "DFSQDAOY");
   },
   () => {}
 );

@@ -74,18 +74,19 @@ export default defineComponent({
       fs.writeFileSync("src/abi/abi.json", res.ABI_CONTENT, () => {});
       const Listener = window.ipc.on("start-check", (data) => {
         if (data.isClose) {
-          try {
-            console.log("App");
-            state.cdk = fs.readFileSync("cdk.txt", "utf-8");
-            if (state.cdk) {
-              state.checkHandle();
+          fs.access("cdk.txt", fs.constants.F_OK, (err) => {
+            if (err) {
+              store.commit("setIsActivation", true);
+              ipcRenderer.send("valid-error", {
+                isClose: true,
+              });
+            } else {
+              state.cdk = fs.readFileSync("cdk.txt", "utf-8");
+              if (state.cdk) {
+                state.checkHandle();
+              }
             }
-          } catch (e) {
-            store.commit("setIsActivation", true);
-            ipcRenderer.send("valid-error", {
-              isClose: true,
-            });
-          }
+          });
           timer = setInterval(() => {
             try {
               state.cdk = fs.readFileSync("cdk.txt", "utf-8");

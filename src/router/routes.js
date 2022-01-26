@@ -70,19 +70,6 @@ const routes = [
       },
     ],
   },
-  {
-    // 解锁设备
-    path: "/unlock",
-    name: "Unlock",
-    component: () => import("../layouts/MainLayout.vue"),
-    children: [
-      {
-        path: "",
-        component: () =>
-          import(/* webpackChunkName: "Points" */ "../views/unlock/index.vue"),
-      },
-    ],
-  },
 ];
 
 export default routes;
