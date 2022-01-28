@@ -90,6 +90,13 @@ export default defineComponent({
       return funName;
     });
     onMounted(() => {
+      fs.access("cdk.txt", (err) => {
+        if (!err) {
+          state.cdk = fs.readFileSync("cdk.txt", "utf-8");
+          state.getIntegral();
+          state.login();
+        }
+      });
       const Listener = window.ipc.on("start-check", (data) => {
         if (data.isClose) {
           let timer = setTimeout(async () => {
