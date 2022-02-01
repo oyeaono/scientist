@@ -122,11 +122,13 @@
 <script>
 import { defineComponent, reactive, toRefs, onMounted, watch } from "vue";
 import { Dialog } from "quasar";
+import { useStore } from "vuex";
 const { ipcRenderer } = window.electron;
 
 export default defineComponent({
   name: "PreSale",
   setup() {
+    const store = useStore();
     const state = reactive({
       startDisabled: false,
       stopDisabled: true,
@@ -208,10 +210,9 @@ export default defineComponent({
         state.option.amount = state.amount;
         state.option.sellOut = state.sellOut;
         state.option.gas = state.gas;
+
         state.option.batch = state.batch;
-        state.option.privateKey = JSON.parse(
-          localStorage.getItem("privateKey")
-        ).privateKey;
+        state.option.privateKey = store.state.app.hasPrivateKey;
         state.option.date = state.date;
         localStorage.setItem("preSaleConfig", JSON.stringify(state.option));
       },

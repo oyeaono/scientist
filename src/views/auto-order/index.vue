@@ -143,6 +143,7 @@ import {
 } from "vue";
 // import SvgIcon from "../../components/svg-icon/index.vue";
 import { Dialog } from "quasar";
+import { useStore } from "vuex";
 const { ipcRenderer } = window.electron;
 // import { Run, coinBalance } from "../../utils/price.js";
 // import { ethers } from "ethers";
@@ -152,6 +153,7 @@ export default defineComponent({
   name: "AutoOrder",
   // components: { SvgIcon },
   setup() {
+    const store = useStore();
     const instance = getCurrentInstance();
     const state = reactive({
       settingShow: false,
@@ -214,9 +216,7 @@ export default defineComponent({
         state.option.sellOut = state.sellOut;
         state.option.loop = state.loop;
         state.option.batch = state.batch;
-        state.option.privateKey = JSON.parse(
-          localStorage.getItem("privateKey")
-        ).privateKey;
+        state.option.privateKey = store.state.app.hasPrivateKey;
         state.option.poll = Number(state.poll);
         localStorage.setItem("autoConfig", JSON.stringify(state.option));
 

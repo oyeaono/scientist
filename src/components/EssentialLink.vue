@@ -1,5 +1,11 @@
 <template>
-  <q-item clickable tag="a" :active="false" :disable="disabled" :to="link">
+  <q-item
+    clickable
+    tag="a"
+    :active="false"
+    :disable="disabled || !hasPrivateKey"
+    :to="link"
+  >
     <!--    <q-item-section-->
     <!--      v-if="icon"-->
     <!--      avatar-->
@@ -18,8 +24,9 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, reactive, toRefs, computed } from "vue";
 import SvgIcon from "./svg-icon/index.vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "EssentialLink",
@@ -56,11 +63,14 @@ export default defineComponent({
     },
   },
   setup() {
+    let store = useStore();
     const state = reactive({
       path: "",
     });
+    let hasPrivateKey = computed(() => store.state.app.hasPrivateKey);
     return {
       ...toRefs(state),
+      hasPrivateKey,
     };
   },
 });

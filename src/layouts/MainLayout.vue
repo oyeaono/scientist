@@ -25,7 +25,7 @@
           </q-btn>
           <q-btn
             @click="openConnectWallet"
-            label="开启功能"
+            label="设置私钥"
             outline
             color="white"
             glossy
@@ -59,13 +59,7 @@
       transition-show="flip-down"
     >
       <div class="connectWallet">
-        <div class="title">设置私钥激活功能</div>
-        <div class="item">
-          <q-input v-model="tgUserName" label="电报用户名" :dense="dense" />
-        </div>
-        <div class="item">
-          <q-input v-model="tgID" label="电报ID" :dense="dense" />
-        </div>
+        <div class="title">设置钱包私钥后启用功能</div>
         <div class="item">
           <q-input
             v-model="privateKey"
@@ -74,23 +68,6 @@
             :dense="dense"
           />
         </div>
-        <div class="item">
-          <q-input
-            v-model="password"
-            type="password"
-            label="钱包密码"
-            :dense="dense"
-          />
-        </div>
-        <div class="item">
-          <q-input
-            v-model="confirmPassword"
-            type="password"
-            label="确认密码"
-            :dense="dense"
-          />
-        </div>
-        <div class="item">填写信息以激活程序功能</div>
         <q-btn
           class="save"
           label="保存"
@@ -121,10 +98,9 @@ export default defineComponent({
   },
 
   setup() {
+    const store = useStore();
     const state = reactive({
       privateKey: "",
-      password: "",
-      confirmPassword: "",
       dense: false,
       leftDrawerOpen: false,
       walletShow: false,
@@ -137,42 +113,16 @@ export default defineComponent({
       },
       openConnectWallet() {
         state.walletShow = true;
+        state.privateKey = store.state.app.hasPrivateKey;
+        console.log("state.privateKey", state.privateKey);
       },
       saveHandle() {
-        if (!state.tgUserName) {
-          state.emptyTip("电报名不能为空");
-          return;
-        }
-        if (!state.tgID) {
-          state.emptyTip("电报ID不能为空");
-          return;
-        }
         if (!state.privateKey) {
           state.emptyTip("私钥不能为空");
           return;
         }
-        if (!state.password) {
-          state.emptyTip("密码不能为空");
-          return;
-        }
-        if (!state.confirmPassword) {
-          state.emptyTip("确认密码不能为空");
-          return;
-        }
-        if (state.password !== state.confirmPassword) {
-          state.emptyTip("两次密码不一样");
-          return;
-        }
         state.walletShow = false;
-        localStorage.setItem(
-          "privateKey",
-          JSON.stringify({
-            tgUserName: state.tgUserName,
-            tgID: state.tgID,
-            privateKey: state.privateKey,
-            password: state.password,
-          })
-        );
+        store.commit("setHasPrivateKey", state.privateKey);
       },
       emptyTip(msg) {
         Dialog.create({
@@ -195,14 +145,6 @@ export default defineComponent({
     });
     onMounted(() => {
       state.linksList = useStore().state.app.linksList;
-      if (JSON.parse(localStorage.getItem("privateKey"))) {
-        const conf = JSON.parse(localStorage.getItem("privateKey"));
-        state.tgUserName = conf.tgUserName;
-        state.tgID = conf.tgID;
-        state.privateKey = conf.privateKey;
-        state.password = conf.password;
-        state.confirmPassword = conf.password;
-      }
     });
     return {
       ...toRefs(state),

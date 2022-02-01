@@ -9,7 +9,7 @@
 
       <q-card-section>
         <div v-for="func in duration" :key="func.functionId" class="text-h6">
-          {{ funName }}：{{ func.endTime }}
+          {{ func.funName }}：{{ func.endTime }}
         </div>
       </q-card-section>
     </q-card>
@@ -23,7 +23,6 @@ import {
   toRefs,
   getCurrentInstance,
   onMounted,
-  computed,
 } from "vue";
 import { useRouter } from "vue-router";
 import { Dialog } from "quasar";
@@ -74,20 +73,17 @@ export default defineComponent({
         console.log("登录", res);
         if (res.code === 100000) {
           state.duration = res.data;
+          state.duration.map((item) => {
+            if (item.functionId === 1) {
+              item.funName = "自动交易";
+            } else if (item.functionId === 2) {
+              item.funName = "抢开盘";
+            } else if (item.functionId === 3) {
+              item.funName = "抢预售";
+            }
+          });
         }
       },
-    });
-    let funName = computed(() => {
-      state.duration.forEach((item) => {
-        if (item.functionId === 1) {
-          funName = "自动交易";
-        } else if (item.functionId === 2) {
-          funName = "抢开盘";
-        } else if (item.functionId === 3) {
-          funName = "抢预售";
-        }
-      });
-      return funName;
     });
     onMounted(() => {
       fs.access("cdk.txt", (err) => {
@@ -115,7 +111,6 @@ export default defineComponent({
     });
     return {
       ...toRefs(state),
-      funName,
     };
   },
 });

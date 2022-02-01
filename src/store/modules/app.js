@@ -39,6 +39,7 @@ export default {
           disabled: false,
         },
       ],
+      hasPrivateKey: "",
     };
   },
   mutations: {
@@ -53,6 +54,9 @@ export default {
     },
     setPreSale(state, status) {
       state.linksList[3].disabled = status;
+    },
+    setHasPrivateKey(state, status) {
+      state.hasPrivateKey = status;
     },
   },
 };

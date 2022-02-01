@@ -15,14 +15,7 @@
 </template>
 
 <script>
-import {
-  defineComponent,
-  reactive,
-  toRefs,
-  onMounted,
-  toRaw,
-  watch,
-} from "vue";
+import { defineComponent, reactive, toRefs, onMounted, toRaw } from "vue";
 import { realTimePrice, buy, sale } from "../../utils/price.js";
 const { ipcRenderer } = window.electron;
 
@@ -66,22 +59,6 @@ export default defineComponent({
         }
       },
     });
-    watch(
-      () => state.balance,
-      (n) => {
-        // 钱包币余额大于0,轮询实时价格
-        if (n > 0) {
-          let timer = setTimeout(async () => {
-            let salePrice = await realTimePrice(state.option).value;
-            if (salePrice >= state.balance * state.option.sellOut) {
-              await state.toSale();
-            }
-            clearTimeout(timer);
-            timer = null;
-          }, 1000);
-        }
-      }
-    );
     onMounted(() => {
       console.log("抢开盘隐藏窗口");
       const Listener = window.ipc.on("PreemptivePurchase", async () => {
@@ -109,54 +86,49 @@ export default defineComponent({
             const start = flow - time;
 
             let timer = setTimeout(async () => {
-              try {
-                const isBuy = await buy(state.option);
+              await buy(state.option);
 
-                if (isBuy) {
-                  state.logList.push("购买成功...");
-                  state.logList.push("任务完成...");
-                  localStorage.setItem(
-                    "preempt",
-                    JSON.stringify(state.logList)
-                  );
+              clearTimeout(timer);
+              timer = null;
+              state.logList.push("购买成功...");
+              state.logList.push("任务完成...");
+              localStorage.setItem("preempt", JSON.stringify(state.logList));
 
-                  state.balance = await realTimePrice(state.option).value;
+              state.windowTimer = setInterval(async () => {
+                state.balance = (await realTimePrice(state.option)).value;
 
-                  // 购买成功清空定时器
-                  clearTimeout(timer);
-                  timer = null;
+                if (state.balance >= state.balance * state.option.sellOut) {
+                  clearTimeout(state.windowTimer);
+                  state.windowTimer = null;
+                  await state.toSale();
                 }
-              } catch (err) {
-                state.taskError(err);
-              }
+              }, Number(state.option.poll) * 1000);
             }, start);
           } else {
             state.windowTimer = setInterval(async () => {
               // 流动性
               const mobility = (await realTimePrice(state.option)).coinValue;
+              console.log("流动性", mobility);
 
               // 池子流动，任务启动
               if (mobility > 0) {
-                try {
-                  const isBuy = await buy(state.option);
+                // 购买成功清空定时器
+                clearTimeout(state.windowTimer);
+                state.windowTimer = null;
+                await buy(state.option);
+                state.logList.push("购买成功...");
+                state.logList.push("任务完成...");
+                localStorage.setItem("preempt", JSON.stringify(state.logList));
 
-                  if (isBuy) {
-                    state.logList.push("购买成功...");
-                    state.logList.push("任务完成...");
-                    localStorage.setItem(
-                      "preempt",
-                      JSON.stringify(state.logList)
-                    );
+                state.windowTimer = setInterval(async () => {
+                  state.balance = (await realTimePrice(state.option)).value;
 
-                    state.balance = await realTimePrice(state.option).value;
-
-                    // 购买成功清空定时器
+                  if (state.balance >= state.balance * state.option.sellOut) {
                     clearTimeout(state.windowTimer);
                     state.windowTimer = null;
+                    await state.toSale();
                   }
-                } catch (err) {
-                  state.taskError(err);
-                }
+                }, Number(state.option.poll) * 1000);
               }
             }, Number(state.option.poll) * 1000);
           }
