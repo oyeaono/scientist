@@ -56,29 +56,23 @@ export default defineComponent({
           const start = flow - time;
 
           let timer = setTimeout(async () => {
-            try {
-              const isBuy = await buy(state.option);
+            await buy(state.option);
 
-              if (isBuy) {
-                state.logList.push("购买成功...");
-                state.logList.push("任务完成...");
-                localStorage.setItem("preSale", JSON.stringify(state.logList));
+            state.logList.push("购买成功...");
+            state.logList.push("任务完成...");
+            localStorage.setItem("preSale", JSON.stringify(state.logList));
 
-                // 关闭窗口
-                ipcRenderer.send("open-pre-sale", {
-                  isClose: false,
-                });
+            // 关闭窗口
+            ipcRenderer.send("open-pre-sale", {
+              isClose: false,
+            });
 
-                ipcRenderer.send("pre-sale-echo", {
-                  data: toRaw(state.logList),
-                });
+            ipcRenderer.send("pre-sale-echo", {
+              data: toRaw(state.logList),
+            });
 
-                clearTimeout(timer);
-                timer = null;
-              }
-            } catch (err) {
-              state.taskError(err);
-            }
+            clearTimeout(timer);
+            timer = null;
           }, start);
         }
       });
