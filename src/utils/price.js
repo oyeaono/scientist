@@ -68,7 +68,7 @@ export class Run {
   pair = async () => {
     return await this.contractFactory.getPair(
       this.option.contractAddress,
-      "0x6111C64629AdA9c769aB31286CfD5f11B4a30aE2"
+      process.env.VUE_APP_BNB
     );
   };
 
@@ -163,7 +163,7 @@ export const buy = async (option) => {
   }
 
   // 计算gas费
-  const gas = option.gas ? (Number(option.gas) * 5).toString() : "5.0";
+  const gas = option.gas ? (Number(option.gas) * 5).toString() : "10.0";
 
   // nonce
   let nonce = await run.wallet.getTransactionCount();
@@ -175,20 +175,18 @@ export const buy = async (option) => {
   // 输入
   if (option.batch) {
     // 抢开盘
-    for (let i = 0; i < 64; i++) {
-      await run.contractRouter01.swapExactETHForTokens(
-        amountOutMin,
-        [process.env.VUE_APP_BNB, option.contractAddress],
-        run.wallet.address,
-        new Date().getTime(),
-        {
-          value: ethers.utils.parseEther(option.amount),
-          gasPrice: ethers.utils.parseUnits(gas, "gwei"),
-          gasLimit: 1000000,
-          nonce: nonce++,
-        }
-      );
-    }
+    await run.contractRouter01.swapExactETHForTokens(
+      amountOutMin,
+      [process.env.VUE_APP_BNB, option.contractAddress],
+      run.wallet.address,
+      new Date().getTime(),
+      {
+        value: ethers.utils.parseEther(option.amount),
+        gasPrice: ethers.utils.parseUnits(gas, "gwei"),
+        gasLimit: 1000000,
+        nonce: nonce++,
+      }
+    );
   } else {
     // 普通购买
     await run.contractRouter01.swapExactETHForTokens(
